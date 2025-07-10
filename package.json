@@ -1,0 +1,52 @@
+{
+  "name": "ekaty-modern",
+  "version": "1.0.0",
+  "description": "Modern eKaty.com restaurant directory with AI integration",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "db:generate": "npx supabase gen types typescript --project-id sctaykgcfkhadowygrj > types/supabase.ts",
+    "deploy": "npm run build && npm run deploy:do"
+  },
+  "dependencies": {
+    "next": "^14.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "@supabase/supabase-js": "^2.39.0",
+    "@supabase/ssr": "^0.1.0",
+    "tailwindcss": "^3.3.0",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.32",
+    "resend": "^2.1.0",
+    "stripe": "^14.9.0",
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "typescript": "^5.0.0",
+    "lucide-react": "^0.294.0",
+    "react-hook-form": "^7.48.0",
+    "@hookform/resolvers": "^3.3.2",
+    "zod": "^3.22.4",
+    "date-fns": "^2.30.0",
+    "react-star-ratings": "^2.3.0",
+    "@googlemaps/js-api-loader": "^1.16.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.0.0",
+    "eslint-config-next": "^14.0.0",
+    "@types/google.maps": "^3.54.10"
+  },
+  "keywords": [
+    "restaurant",
+    "directory",
+    "local",
+    "reviews",
+    "katy",
+    "texas"
+  ],
+  "author": "James Strickland",
+  "license": "MIT"
+}

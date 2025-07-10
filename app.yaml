@@ -1,0 +1,51 @@
+name: ekaty-modern
+region: nyc
+services:
+- build_command: npm run build
+  environment_slug: node-js
+  envs:
+  - key: NODE_ENV
+    scope: RUN_AND_BUILD_TIME
+    value: production
+  - key: NEXT_PUBLIC_SUPABASE_URL
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+  - key: NEXT_PUBLIC_SUPABASE_ANON_KEY
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+  - key: SUPABASE_SERVICE_ROLE_KEY
+    scope: RUN_TIME
+    type: SECRET
+  - key: RESEND_API_KEY
+    scope: RUN_TIME
+    type: SECRET
+  - key: NEXT_PUBLIC_APP_URL
+    scope: RUN_AND_BUILD_TIME
+    value: https://ekaty.com
+  - key: NEXT_PUBLIC_APP_NAME
+    scope: RUN_AND_BUILD_TIME
+    value: eKaty.com
+  - key: NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+  - key: GOOGLE_PLACES_API_KEY
+    scope: RUN_TIME
+    type: SECRET
+  - key: NEXTAUTH_SECRET
+    scope: RUN_TIME
+    type: SECRET
+  github:
+    branch: main
+    deploy_on_push: true
+    repo: YOUR_GITHUB_REPO_HERE
+  http_port: 3000
+  instance_count: 1
+  instance_size_slug: basic-xxs
+  name: ekaty-web
+  run_command: npm start
+  source_dir: /
+domains:
+- domain: ekaty.com
+  type: PRIMARY
+- domain: www.ekaty.com
+  type: ALIAS
