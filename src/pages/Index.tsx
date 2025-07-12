@@ -26,7 +26,7 @@ const mockRestaurants = [
   },
 ]
 
-export default function HomePage() {
+export default function Index() {
   return (
     <>
       <Hero />
