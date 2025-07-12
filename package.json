@@ -24,6 +24,7 @@
     "@vitejs/plugin-react-swc": "^3.10.2",
     "autoprefixer": "^10.4.16",
     "date-fns": "^2.30.0",
+    "lovable-tagger": "^1.1.8",
     "lucide-react": "^0.294.0",
     "postcss": "^8.4.32",
     "puppeteer": "^24.12.1",
