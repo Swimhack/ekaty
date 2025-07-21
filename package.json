@@ -11,14 +11,6 @@
   "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
   "type-check": "tsc --noEmit"
 }
-"scripts": {
-  "dev": "vite",
-  "build": "vite build",
-  "build:dev": "vite build --mode development",
-  "preview": "vite preview",
-  "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-  "type-check": "tsc --noEmit"
-}
   "dependencies": {
     "@googlemaps/js-api-loader": "^1.16.2",
     "@hookform/resolvers": "^3.3.2",
