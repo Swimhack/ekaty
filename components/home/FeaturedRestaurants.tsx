@@ -1,5 +1,4 @@
-import Link from 'next/link'
-import Image from 'next/image'
+import { Link } from 'react-router-dom'
 import { Star, MapPin, Clock, Phone, ChefHat } from 'lucide-react'
 
 interface Restaurant {
@@ -95,11 +94,10 @@ export default function FeaturedRestaurants({ restaurants }: FeaturedRestaurants
               {/* Restaurant image */}
               <div className="relative h-48 overflow-hidden">
                 {restaurant.cover_image_url ? (
-                  <Image
+                  <img
                     src={restaurant.cover_image_url}
                     alt={restaurant.name}
-                    fill
-                    className="object-cover"
+                    className="w-full h-full object-cover"
                   />
                 ) : (
                   <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
@@ -127,7 +125,7 @@ export default function FeaturedRestaurants({ restaurants }: FeaturedRestaurants
                 <div className="mb-4">
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">
                     <Link
-                      href={`/restaurant/${restaurant.slug}`}
+                      to={`/restaurant/${restaurant.slug}`}
                       className="hover:text-ekaty-500 transition-colors"
                     >
                       {restaurant.name}
@@ -182,7 +180,7 @@ export default function FeaturedRestaurants({ restaurants }: FeaturedRestaurants
                 {/* Actions */}
                 <div className="flex items-center justify-between">
                   <Link
-                    href={`/restaurant/${restaurant.slug}`}
+                    to={`/restaurant/${restaurant.slug}`}
                     className="btn-primary text-sm"
                   >
                     View Details
@@ -206,7 +204,7 @@ export default function FeaturedRestaurants({ restaurants }: FeaturedRestaurants
         {/* View all button */}
         <div className="text-center">
           <Link
-            href="/restaurants"
+            to="/restaurants"
             className="btn-outline text-lg px-8 py-3"
           >
             View All Restaurants

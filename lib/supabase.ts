@@ -1,9 +1,6 @@
 import { createClient as createBrowserClient } from './supabase-client'
-import { createClient as createServerClientSSR } from './supabase-server'
 
 export const createClient = createBrowserClient
-
-export const createServerClient = createServerClientSSR
 
 // Database types will be generated with: npm run db:generate
 export type Database = {

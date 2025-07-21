@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import { Link } from 'react-router-dom'
 import { Facebook, Twitter, Instagram, Mail, Phone, MapPin } from 'lucide-react'
 
 export default function Footer() {
@@ -6,32 +6,32 @@ export default function Footer() {
 
   const footerLinks = {
     discover: [
-      { name: 'All Restaurants', href: '/restaurants' },
-      { name: 'By Cuisine', href: '/cuisines' },
-      { name: 'By Area', href: '/areas' },
-      { name: 'Featured Restaurants', href: '/featured' },
-      { name: 'New Restaurants', href: '/new' },
+      { name: 'All Restaurants', to: '/restaurants' },
+      { name: 'By Cuisine', to: '/cuisines' },
+      { name: 'By Area', to: '/areas' },
+      { name: 'Featured Restaurants', to: '/featured' },
+      { name: 'New Restaurants', to: '/new' },
     ],
     community: [
-      { name: 'Write a Review', href: '/reviews/new' },
-      { name: 'Browse Reviews', href: '/reviews' },
-      { name: 'Join Newsletter', href: '/newsletter' },
-      { name: 'Restaurant Events', href: '/events' },
-      { name: 'Food Blog', href: '/blog' },
+      { name: 'Write a Review', to: '/reviews/new' },
+      { name: 'Browse Reviews', to: '/reviews' },
+      { name: 'Join Newsletter', to: '/newsletter' },
+      { name: 'Restaurant Events', to: '/events' },
+      { name: 'Food Blog', to: '/blog' },
     ],
     business: [
-      { name: 'Add Your Restaurant', href: '/business/add' },
-      { name: 'Business Dashboard', href: '/business/dashboard' },
-      { name: 'Advertising', href: '/business/advertising' },
-      { name: 'API Access', href: '/business/api' },
-      { name: 'Partner with Us', href: '/business/partners' },
+      { name: 'Add Your Restaurant', to: '/business/add' },
+      { name: 'Business Dashboard', to: '/business/dashboard' },
+      { name: 'Advertising', to: '/business/advertising' },
+      { name: 'API Access', to: '/business/api' },
+      { name: 'Partner with Us', to: '/business/partners' },
     ],
     support: [
-      { name: 'Help Center', href: '/help' },
-      { name: 'Contact Us', href: '/contact' },
-      { name: 'Report an Issue', href: '/report' },
-      { name: 'Privacy Policy', href: '/privacy' },
-      { name: 'Terms of Service', href: '/terms' },
+      { name: 'Help Center', to: '/help' },
+      { name: 'Contact Us', to: '/contact' },
+      { name: 'Report an Issue', to: '/report' },
+      { name: 'Privacy Policy', to: '/privacy' },
+      { name: 'Terms of Service', to: '/terms' },
     ]
   }
 
@@ -84,7 +84,7 @@ export default function Footer() {
                   {footerLinks.discover.map((link) => (
                     <li key={link.name}>
                       <Link
-                        href={link.href}
+                        to={link.to}
                         className="text-gray-400 hover:text-white transition-colors text-sm"
                       >
                         {link.name}
@@ -100,7 +100,7 @@ export default function Footer() {
                   {footerLinks.community.map((link) => (
                     <li key={link.name}>
                       <Link
-                        href={link.href}
+                        to={link.to}
                         className="text-gray-400 hover:text-white transition-colors text-sm"
                       >
                         {link.name}
@@ -116,7 +116,7 @@ export default function Footer() {
                   {footerLinks.business.map((link) => (
                     <li key={link.name}>
                       <Link
-                        href={link.href}
+                        to={link.to}
                         className="text-gray-400 hover:text-white transition-colors text-sm"
                       >
                         {link.name}
@@ -132,7 +132,7 @@ export default function Footer() {
                   {footerLinks.support.map((link) => (
                     <li key={link.name}>
                       <Link
-                        href={link.href}
+                        to={link.to}
                         className="text-gray-400 hover:text-white transition-colors text-sm"
                       >
                         {link.name}

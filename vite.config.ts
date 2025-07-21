@@ -5,16 +5,18 @@ import { fileURLToPath } from 'url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-export default defineConfig({
-  plugins: [react()],
+export default defineConfig(() => ({
+  plugins: [
+    react(),
+  ],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
   },
   server: {
+    host: "::",
     port: 8080,
-    host: true,
   },
   build: {
     outDir: 'dist',
@@ -23,4 +25,4 @@ export default defineConfig({
   define: {
     global: 'globalThis',
   },
-})
+}))

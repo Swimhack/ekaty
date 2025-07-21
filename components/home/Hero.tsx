@@ -1,20 +1,18 @@
-'use client'
-
 import { useState } from 'react'
 import { Search, MapPin } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import { useNavigate } from 'react-router-dom'
 
 export default function Hero() {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedArea, setSelectedArea] = useState('')
-  const router = useRouter()
+  const navigate = useNavigate()
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
     const params = new URLSearchParams()
     if (searchQuery) params.set('q', searchQuery)
     if (selectedArea) params.set('area', selectedArea)
-    router.push(`/restaurants?${params.toString()}`)
+    navigate(`/restaurants?${params.toString()}`)
   }
 
   const katyAreas = [

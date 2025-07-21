@@ -1,23 +1,21 @@
-'use client'
-
 import { Search as SearchIcon, MapPin, Filter } from 'lucide-react'
-import Link from 'next/link'
+import { Link } from 'react-router-dom'
 
 export default function SearchSection() {
   const popularCuisines = [
-    { name: 'Italian', count: 23, href: '/restaurants?cuisine=italian' },
-    { name: 'Mexican', count: 31, href: '/restaurants?cuisine=mexican' },
-    { name: 'American', count: 45, href: '/restaurants?cuisine=american' },
-    { name: 'Asian', count: 18, href: '/restaurants?cuisine=asian' },
-    { name: 'BBQ', count: 12, href: '/restaurants?cuisine=bbq' },
-    { name: 'Seafood', count: 15, href: '/restaurants?cuisine=seafood' },
+    { name: 'Italian', count: 23, to: '/restaurants?cuisine=italian' },
+    { name: 'Mexican', count: 31, to: '/restaurants?cuisine=mexican' },
+    { name: 'American', count: 45, to: '/restaurants?cuisine=american' },
+    { name: 'Asian', count: 18, to: '/restaurants?cuisine=asian' },
+    { name: 'BBQ', count: 12, to: '/restaurants?cuisine=bbq' },
+    { name: 'Seafood', count: 15, to: '/restaurants?cuisine=seafood' },
   ]
 
   const popularAreas = [
-    { name: 'Cinco Ranch', count: 34, href: '/restaurants?area=cinco-ranch' },
-    { name: 'Old Katy', count: 28, href: '/restaurants?area=old-katy' },
-    { name: 'Mason Creek', count: 22, href: '/restaurants?area=mason-creek' },
-    { name: 'Cross Creek Ranch', count: 19, href: '/restaurants?area=cross-creek-ranch' },
+    { name: 'Cinco Ranch', count: 34, to: '/restaurants?area=cinco-ranch' },
+    { name: 'Old Katy', count: 28, to: '/restaurants?area=old-katy' },
+    { name: 'Mason Creek', count: 22, to: '/restaurants?area=mason-creek' },
+    { name: 'Cross Creek Ranch', count: 19, to: '/restaurants?area=cross-creek-ranch' },
   ]
 
   return (
@@ -49,7 +47,7 @@ export default function SearchSection() {
               {popularCuisines.map((cuisine) => (
                 <Link
                   key={cuisine.name}
-                  href={cuisine.href}
+                  to={cuisine.to}
                   className="group p-4 border border-gray-200 rounded-lg hover:border-ekaty-200 hover:bg-ekaty-50 transition-all duration-200"
                 >
                   <div className="flex items-center justify-between">
@@ -66,7 +64,7 @@ export default function SearchSection() {
             
             <div className="mt-6">
               <Link
-                href="/cuisines"
+                to="/cuisines"
                 className="inline-flex items-center text-ekaty-500 hover:text-ekaty-600 font-medium"
               >
                 View all cuisines →
@@ -89,7 +87,7 @@ export default function SearchSection() {
               {popularAreas.map((area) => (
                 <Link
                   key={area.name}
-                  href={area.href}
+                  to={area.to}
                   className="group block p-4 border border-gray-200 rounded-lg hover:border-restaurant-200 hover:bg-restaurant-50 transition-all duration-200"
                 >
                   <div className="flex items-center justify-between">
@@ -106,7 +104,7 @@ export default function SearchSection() {
             
             <div className="mt-6">
               <Link
-                href="/areas"
+                to="/areas"
                 className="inline-flex items-center text-restaurant-500 hover:text-restaurant-600 font-medium"
               >
                 View all areas →
@@ -125,7 +123,7 @@ export default function SearchSection() {
             <p className="text-gray-600 text-sm mb-4">
               Filter by price, features, ratings, and more
             </p>
-            <Link href="/restaurants?advanced=true" className="text-blue-600 hover:text-blue-700 font-medium">
+            <Link to="/restaurants?advanced=true" className="text-blue-600 hover:text-blue-700 font-medium">
               Try Advanced Search →
             </Link>
           </div>
@@ -138,7 +136,7 @@ export default function SearchSection() {
             <p className="text-gray-600 text-sm mb-4">
               See restaurants on an interactive map
             </p>
-            <Link href="/restaurants/map" className="text-green-600 hover:text-green-700 font-medium">
+            <Link to="/restaurants/map" className="text-green-600 hover:text-green-700 font-medium">
               View Map →
             </Link>
           </div>
@@ -151,7 +149,7 @@ export default function SearchSection() {
             <p className="text-gray-600 text-sm mb-4">
               Search by specific dishes and menu items
             </p>
-            <Link href="/search/dishes" className="text-purple-600 hover:text-purple-700 font-medium">
+            <Link to="/search/dishes" className="text-purple-600 hover:text-purple-700 font-medium">
               Search Dishes →
             </Link>
           </div>

@@ -1,7 +1,5 @@
-'use client'
-
 import { useState } from 'react'
-import Link from 'next/link'
+import { Link } from 'react-router-dom'
 import { Menu, X, Search, User, ChevronDown } from 'lucide-react'
 import SearchModal from '@/components/search/SearchModal'
 
@@ -17,12 +15,12 @@ export default function Header() {
   }
 
   const navigation = [
-    { name: 'Home', href: '/' },
-    { name: 'Restaurants', href: '/restaurants' },
-    { name: 'Cuisines', href: '/cuisines' },
-    { name: 'Areas', href: '/areas' },
-    { name: 'Reviews', href: '/reviews' },
-    { name: 'About', href: '/about' },
+    { name: 'Home', to: '/' },
+    { name: 'Restaurants', to: '/restaurants' },
+    { name: 'Cuisines', to: '/cuisines' },
+    { name: 'Areas', to: '/areas' },
+    { name: 'Reviews', to: '/reviews' },
+    { name: 'About', to: '/about' },
   ]
 
   return (
@@ -32,7 +30,7 @@ export default function Header() {
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
             <div className="flex items-center">
-              <Link href="/" className="flex items-center space-x-2">
+              <Link to="/" className="flex items-center space-x-2">
                 <div className="w-8 h-8 bg-ekaty-500 rounded-lg flex items-center justify-center">
                   <span className="text-white font-bold text-lg">eK</span>
                 </div>
@@ -47,7 +45,7 @@ export default function Header() {
               {navigation.map((item) => (
                 <Link
                   key={item.name}
-                  href={item.href}
+                  to={item.to}
                   className="nav-link"
                 >
                   {item.name}
@@ -84,21 +82,21 @@ export default function Header() {
                     <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 z-50">
                       <div className="py-1">
                         <Link
-                          href="/profile"
+                          to="/profile"
                           className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                           onClick={() => setIsUserMenuOpen(false)}
                         >
                           My Profile
                         </Link>
                         <Link
-                          href="/favorites"
+                          to="/favorites"
                           className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                           onClick={() => setIsUserMenuOpen(false)}
                         >
                           My Favorites
                         </Link>
                         <Link
-                          href="/my-reviews"
+                          to="/my-reviews"
                           className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                           onClick={() => setIsUserMenuOpen(false)}
                         >
@@ -118,13 +116,13 @@ export default function Header() {
               ) : (
                 <div className="flex items-center space-x-3">
                   <Link
-                    href="/auth/login"
+                    to="/auth/login"
                     className="text-gray-700 hover:text-gray-900 transition-colors"
                   >
                     Sign In
                   </Link>
                   <Link
-                    href="/auth/register"
+                    to="/auth/register"
                     className="btn-primary"
                   >
                     Sign Up
@@ -151,7 +149,7 @@ export default function Header() {
               {navigation.map((item) => (
                 <Link
                   key={item.name}
-                  href={item.href}
+                  to={item.to}
                   className="block px-3 py-2 text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-colors"
                   onClick={() => setIsMenuOpen(false)}
                 >
@@ -162,14 +160,14 @@ export default function Header() {
                 <>
                   <hr className="my-2" />
                   <Link
-                    href="/auth/login"
+                    to="/auth/login"
                     className="block px-3 py-2 text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Sign In
                   </Link>
                   <Link
-                    href="/auth/register"
+                    to="/auth/register"
                     className="block px-3 py-2 text-ekaty-500 hover:text-ekaty-600 hover:bg-gray-50 rounded-md transition-colors font-medium"
                     onClick={() => setIsMenuOpen(false)}
                   >
