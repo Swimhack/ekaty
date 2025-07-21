@@ -1,3 +1,4 @@
+
 import { useState } from 'react'
 import { Search, MapPin } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
@@ -27,6 +28,15 @@ export default function Hero() {
     'Grand Lakes',
     'Firethorne',
     'Jordan Ranch',
+  ]
+
+  const cuisineCategories = [
+    { name: 'Italian', icon: '🍝', color: 'bg-red-500' },
+    { name: 'Mexican', icon: '🌮', color: 'bg-yellow-500' },
+    { name: 'Steakhouse', icon: '🥩', color: 'bg-red-600' },
+    { name: 'Asian', icon: '🍜', color: 'bg-orange-500' },
+    { name: 'Breakfast', icon: '🥞', color: 'bg-amber-500' },
+    { name: 'BBQ', icon: '🍖', color: 'bg-red-700' },
   ]
 
   return (
@@ -92,6 +102,23 @@ export default function Hero() {
             </div>
           </form>
 
+          {/* Cuisine category buttons */}
+          <div className="mb-8">
+            <h3 className="text-lg font-semibold text-gray-700 mb-4">Browse by Cuisine</h3>
+            <div className="flex flex-wrap justify-center gap-4">
+              {cuisineCategories.map((cuisine) => (
+                <button
+                  key={cuisine.name}
+                  onClick={() => navigate(`/restaurants?cuisine=${cuisine.name.toLowerCase()}`)}
+                  className={`${cuisine.color} hover:opacity-90 text-white font-medium px-6 py-3 rounded-lg transition-all duration-200 flex items-center gap-2 shadow-md hover:shadow-lg transform hover:-translate-y-0.5`}
+                >
+                  <span className="text-xl">{cuisine.icon}</span>
+                  <span>{cuisine.name}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
           {/* Quick links */}
           <div className="flex flex-wrap justify-center gap-4 text-sm">
             <span className="text-gray-500">Popular searches:</span>
@@ -102,28 +129,22 @@ export default function Hero() {
               Pizza
             </button>
             <button
-              onClick={() => setSearchQuery('mexican')}
-              className="text-ekaty-500 hover:text-ekaty-600 font-medium transition-colors"
-            >
-              Mexican Food
-            </button>
-            <button
-              onClick={() => setSearchQuery('bbq')}
-              className="text-ekaty-500 hover:text-ekaty-600 font-medium transition-colors"
-            >
-              BBQ
-            </button>
-            <button
               onClick={() => setSearchQuery('sushi')}
               className="text-ekaty-500 hover:text-ekaty-600 font-medium transition-colors"
             >
               Sushi
             </button>
             <button
-              onClick={() => setSearchQuery('steakhouse')}
+              onClick={() => setSearchQuery('burgers')}
               className="text-ekaty-500 hover:text-ekaty-600 font-medium transition-colors"
             >
-              Steakhouse
+              Burgers
+            </button>
+            <button
+              onClick={() => setSearchQuery('coffee')}
+              className="text-ekaty-500 hover:text-ekaty-600 font-medium transition-colors"
+            >
+              Coffee
             </button>
           </div>
         </div>

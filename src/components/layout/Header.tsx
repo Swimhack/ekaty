@@ -1,5 +1,6 @@
+
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { Menu, X, Search, User, ChevronDown } from 'lucide-react'
 import SearchModal from '@/components/search/SearchModal'
 
@@ -7,21 +8,23 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
+  const location = useLocation()
   const user = null // Temporarily disabled for build
   
   const handleSignOut = async () => {
-    // await supabase.auth.signOut()
     setIsUserMenuOpen(false)
   }
 
   const navigation = [
-    { name: 'Home', to: '/' },
-    { name: 'Restaurants', to: '/restaurants' },
-    { name: 'Cuisines', to: '/cuisines' },
-    { name: 'Areas', to: '/areas' },
-    { name: 'Reviews', to: '/reviews' },
+    { name: 'Popular', to: '/popular' },
+    { name: 'Map', to: '/map' },
+    { name: 'Grub Roulette', to: '/grub-roulette' },
+    { name: 'All Restaurants', to: '/restaurants' },
     { name: 'About', to: '/about' },
+    { name: 'Contact', to: '/contact' },
   ]
+
+  const isActive = (path: string) => location.pathname === path
 
   return (
     <>
@@ -46,7 +49,11 @@ export default function Header() {
                 <Link
                   key={item.name}
                   to={item.to}
-                  className="nav-link"
+                  className={`${
+                    isActive(item.to) 
+                      ? 'text-ekaty-500 border-b-2 border-ekaty-500' 
+                      : 'text-gray-700 hover:text-ekaty-500'
+                  } font-medium transition-colors duration-200 pb-1`}
                 >
                   {item.name}
                 </Link>
@@ -64,7 +71,7 @@ export default function Header() {
                 <Search size={20} />
               </button>
 
-              {/* User menu */}
+              {/* User menu or auth buttons */}
               {user ? (
                 <div className="relative">
                   <button
@@ -72,9 +79,7 @@ export default function Header() {
                     className="flex items-center space-x-2 text-gray-700 hover:text-gray-900 transition-colors"
                   >
                     <User size={20} />
-                    <span className="hidden sm:block">
-  User
-                    </span>
+                    <span className="hidden sm:block">User</span>
                     <ChevronDown size={16} />
                   </button>
 
@@ -150,7 +155,11 @@ export default function Header() {
                 <Link
                   key={item.name}
                   to={item.to}
-                  className="block px-3 py-2 text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-colors"
+                  className={`block px-3 py-2 rounded-md transition-colors ${
+                    isActive(item.to)
+                      ? 'text-ekaty-500 bg-ekaty-50'
+                      : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50'
+                  }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.name}
