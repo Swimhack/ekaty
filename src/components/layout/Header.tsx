@@ -28,7 +28,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 backdrop-blur-md bg-gradient-to-r from-purple-900/95 to-indigo-900/95 shadow-xl border-b border-purple-700/30" style={{ backgroundColor: 'rgba(26, 40, 116, 0.95)' }}>
+      <header className="sticky top-0 z-50 backdrop-blur-md bg-white/95 shadow-xl border-b border-orange-200/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-18 md:h-20">
             {/* Enhanced eKaty.com Logo */}
@@ -48,10 +48,10 @@ export default function Header() {
                   <div className="absolute -inset-2 bg-white/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl"></div>
                 </div>
                 <div className="hidden sm:block">
-                  <div className="text-xl text-white font-bold tracking-wide drop-shadow-sm">
+                  <div className="text-xl text-gray-800 font-bold tracking-wide">
                     Restaurant Directory
                   </div>
-                  <div className="text-sm text-purple-200 font-medium tracking-wide">
+                  <div className="text-sm text-orange-600 font-medium tracking-wide">
                     for Katy, Texas
                   </div>
                 </div>
@@ -66,8 +66,8 @@ export default function Header() {
                   to={item.to}
                   className={`${
                     isActive(item.to) 
-                      ? 'text-white bg-purple-700/30 border-b-2 border-white' 
-                      : 'text-purple-100 hover:text-white hover:bg-purple-700/20'
+                      ? 'text-orange-600 bg-orange-50 border-b-2 border-orange-500' 
+                      : 'text-gray-700 hover:text-orange-600 hover:bg-orange-50/50'
                   } font-medium transition-all duration-200 px-3 py-2 rounded-t-lg border-b-2 border-transparent`}
                 >
                   {item.name}
@@ -80,7 +80,7 @@ export default function Header() {
               {/* Search button */}
               <button
                 onClick={() => setIsSearchOpen(true)}
-                className="p-2 text-purple-200 hover:text-white transition-colors bg-purple-700/20 hover:bg-purple-700/40 rounded-lg"
+                className="p-2 text-gray-600 hover:text-orange-600 transition-colors bg-orange-50 hover:bg-orange-100 rounded-lg"
                 aria-label="Search restaurants"
               >
                 <Search size={20} />
@@ -137,13 +137,13 @@ export default function Header() {
                 <div className="flex items-center space-x-3">
                   <Link
                     to="/auth/login"
-                    className="text-purple-200 hover:text-white transition-colors px-3 py-2 rounded-lg hover:bg-purple-700/20"
+                    className="text-gray-700 hover:text-orange-600 transition-colors px-3 py-2 rounded-lg hover:bg-orange-50"
                   >
                     Sign In
                   </Link>
                   <Link
                     to="/auth/register"
-                    className="bg-white text-purple-800 hover:bg-purple-50 font-medium px-4 py-2 rounded-lg transition-colors duration-200 border border-white/20"
+                    className="bg-orange-500 text-white hover:bg-orange-600 font-medium px-4 py-2 rounded-lg transition-colors duration-200"
                   >
                     Sign Up
                   </Link>
@@ -153,7 +153,7 @@ export default function Header() {
               {/* Mobile menu button */}
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="md:hidden p-2 text-purple-200 hover:text-white transition-colors bg-purple-700/20 hover:bg-purple-700/40 rounded-lg"
+                className="md:hidden p-2 text-gray-600 hover:text-orange-600 transition-colors bg-orange-50 hover:bg-orange-100 rounded-lg"
                 aria-label="Toggle menu"
               >
                 {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
@@ -164,16 +164,16 @@ export default function Header() {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden border-t border-purple-600">
-            <div className="px-2 pt-2 pb-3 space-y-1" style={{ backgroundColor: '#1A2874' }}>
+          <div className="md:hidden border-t border-orange-200">
+            <div className="px-2 pt-2 pb-3 space-y-1 bg-white">
               {navigation.map((item) => (
                 <Link
                   key={item.name}
                   to={item.to}
                   className={`block px-3 py-2 rounded-md transition-colors ${
                     isActive(item.to)
-                      ? 'text-white bg-purple-700/40'
-                      : 'text-purple-100 hover:text-white hover:bg-purple-700/20'
+                      ? 'text-orange-600 bg-orange-100'
+                      : 'text-gray-700 hover:text-orange-600 hover:bg-orange-50'
                   }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
@@ -185,14 +185,14 @@ export default function Header() {
                   <hr className="my-2" />
                   <Link
                     to="/auth/login"
-                    className="block px-3 py-2 text-purple-200 hover:text-white hover:bg-purple-700/20 rounded-md transition-colors"
+                    className="block px-3 py-2 text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-md transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Sign In
                   </Link>
                   <Link
                     to="/auth/register"
-                    className="block px-3 py-2 text-white bg-purple-700/30 hover:bg-purple-700/50 rounded-md transition-colors font-medium"
+                    className="block px-3 py-2 text-white bg-orange-500 hover:bg-orange-600 rounded-md transition-colors font-medium"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Sign Up

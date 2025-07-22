@@ -31,7 +31,7 @@ export default function Hero() {
   ]
 
   return (
-    <div className="relative bg-gradient-to-br from-purple-900 via-purple-800 to-indigo-900 overflow-hidden min-h-screen flex items-center" style={{ backgroundColor: '#1A2874' }}>
+    <div className="relative bg-gradient-to-br from-orange-50 to-amber-50 overflow-hidden min-h-screen flex items-center">
       {/* Full-width Hero Background Image */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -44,7 +44,7 @@ export default function Hero() {
       />
       
       {/* Gradient overlay for better text contrast */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60" />
+      <div className="absolute inset-0 bg-gradient-to-b from-orange-900/20 via-transparent to-orange-900/40" />
       
       {/* Grain Elevator silhouette - positioned for better visual balance */}
       <div 
