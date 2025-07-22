@@ -24,6 +24,7 @@
     "express": "^5.1.0",
     "lovable-tagger": "^1.1.8",
     "lucide-react": "^0.294.0",
+    "playwright": "^1.54.1",
     "postcss": "^8.4.32",
     "puppeteer": "^24.14.0",
     "react": "^18.2.0",
