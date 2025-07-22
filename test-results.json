@@ -1,0 +1,168 @@
+{
+  "tests": [
+    {
+      "name": "Homepage - Response status",
+      "passed": true,
+      "details": "Status: 200",
+      "timestamp": "2025-07-22T03:58:13.549Z"
+    },
+    {
+      "name": "Homepage - Title present",
+      "passed": true,
+      "details": "eKaty title found",
+      "timestamp": "2025-07-22T03:58:13.552Z"
+    },
+    {
+      "name": "Homepage - Restaurant content",
+      "passed": true,
+      "details": "Restaurant-related content found",
+      "timestamp": "2025-07-22T03:58:13.552Z"
+    },
+    {
+      "name": "Homepage - API integration",
+      "passed": false,
+      "details": "API calls referenced in HTML",
+      "timestamp": "2025-07-22T03:58:13.555Z"
+    },
+    {
+      "name": "Homepage - CSS/JS assets",
+      "passed": true,
+      "details": "Frontend assets properly loaded",
+      "timestamp": "2025-07-22T03:58:13.555Z"
+    },
+    {
+      "name": "Homepage - React application",
+      "passed": true,
+      "details": "React application structure detected",
+      "timestamp": "2025-07-22T03:58:13.556Z"
+    },
+    {
+      "name": "/api/restaurants.php - Response status",
+      "passed": true,
+      "details": "Status: 200",
+      "timestamp": "2025-07-22T03:58:13.584Z"
+    },
+    {
+      "name": "/api/restaurants.php - Response type",
+      "passed": true,
+      "details": "Expected: array, Got: array",
+      "timestamp": "2025-07-22T03:58:13.585Z"
+    },
+    {
+      "name": "/api/restaurants.php - Data available",
+      "passed": true,
+      "details": "Returned 6 items",
+      "timestamp": "2025-07-22T03:58:13.585Z"
+    },
+    {
+      "name": "/api/cuisines.php - Response status",
+      "passed": true,
+      "details": "Status: 200",
+      "timestamp": "2025-07-22T03:58:13.631Z"
+    },
+    {
+      "name": "/api/cuisines.php - Response type",
+      "passed": true,
+      "details": "Expected: array, Got: array",
+      "timestamp": "2025-07-22T03:58:13.631Z"
+    },
+    {
+      "name": "/api/cuisines.php - Data available",
+      "passed": true,
+      "details": "Returned 10 items",
+      "timestamp": "2025-07-22T03:58:13.631Z"
+    },
+    {
+      "name": "Restaurant Data - Complete records",
+      "passed": true,
+      "details": "6/6 restaurants have name and description",
+      "timestamp": "2025-07-22T03:58:13.634Z"
+    },
+    {
+      "name": "Restaurant Data - Images available",
+      "passed": true,
+      "details": "6/6 restaurants have image URLs",
+      "timestamp": "2025-07-22T03:58:13.634Z"
+    },
+    {
+      "name": "Restaurant Data - Ratings available",
+      "passed": true,
+      "details": "6/6 restaurants have ratings",
+      "timestamp": "2025-07-22T03:58:13.634Z"
+    },
+    {
+      "name": "Restaurant Data - Phone numbers",
+      "passed": true,
+      "details": "6/6 restaurants have phone numbers",
+      "timestamp": "2025-07-22T03:58:13.634Z"
+    },
+    {
+      "name": "Restaurant Data - Addresses",
+      "passed": true,
+      "details": "6/6 restaurants have addresses",
+      "timestamp": "2025-07-22T03:58:13.635Z"
+    },
+    {
+      "name": "Restaurant Data - Cuisine diversity",
+      "passed": true,
+      "details": "4 different cuisine types found",
+      "timestamp": "2025-07-22T03:58:13.635Z"
+    },
+    {
+      "name": "Cuisine Data - Categories available",
+      "passed": true,
+      "details": "10 cuisine categories found",
+      "timestamp": "2025-07-22T03:58:13.635Z"
+    },
+    {
+      "name": "Cuisine Data - Restaurant counts",
+      "passed": true,
+      "details": "Total of 140 restaurant entries across all cuisines",
+      "timestamp": "2025-07-22T03:58:13.635Z"
+    },
+    {
+      "name": "Cuisine Data - Proper structure",
+      "passed": true,
+      "details": "All cuisine entries have name and count",
+      "timestamp": "2025-07-22T03:58:13.635Z"
+    },
+    {
+      "name": "Static Asset - /css/style.css",
+      "passed": true,
+      "details": "File exists and accessible",
+      "timestamp": "2025-07-22T03:58:13.656Z"
+    },
+    {
+      "name": "Static Asset - /css/main.css",
+      "passed": true,
+      "details": "File exists and accessible",
+      "timestamp": "2025-07-22T03:58:13.674Z"
+    },
+    {
+      "name": "Static Asset - /js/app.js",
+      "passed": true,
+      "details": "File exists and accessible",
+      "timestamp": "2025-07-22T03:58:13.699Z"
+    },
+    {
+      "name": "Static Asset - /js/main.js",
+      "passed": true,
+      "details": "File exists and accessible",
+      "timestamp": "2025-07-22T03:58:13.715Z"
+    },
+    {
+      "name": "Static Asset - /js/script.js",
+      "passed": true,
+      "details": "File exists and accessible",
+      "timestamp": "2025-07-22T03:58:13.731Z"
+    }
+  ],
+  "summary": {
+    "total": 26,
+    "passed": 25,
+    "failed": 1,
+    "errors": [
+      "API calls referenced in HTML"
+    ]
+  }
+}
