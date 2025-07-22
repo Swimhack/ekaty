@@ -1,22 +1,42 @@
+import { useState, useEffect, memo, useMemo } from 'react'
 import { Search as SearchIcon, MapPin, Filter } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
-export default function SearchSection() {
-  const popularCuisines = [
-    { name: 'Italian', count: 23, to: '/restaurants?cuisine=italian' },
-    { name: 'Mexican', count: 31, to: '/restaurants?cuisine=mexican' },
-    { name: 'American', count: 45, to: '/restaurants?cuisine=american' },
-    { name: 'Asian', count: 18, to: '/restaurants?cuisine=asian' },
-    { name: 'BBQ', count: 12, to: '/restaurants?cuisine=bbq' },
-    { name: 'Seafood', count: 15, to: '/restaurants?cuisine=seafood' },
-  ]
+interface Cuisine {
+  id: number
+  name: string
+  restaurant_count: number
+}
 
-  const popularAreas = [
-    { name: 'Cinco Ranch', count: 34, to: '/restaurants?area=cinco-ranch' },
-    { name: 'Old Katy', count: 28, to: '/restaurants?area=old-katy' },
+const SearchSection = memo(function SearchSection() {
+  const [cuisines, setCuisines] = useState<Cuisine[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchCuisines = async () => {
+      try {
+        const response = await fetch('/api/cuisines.php')
+        if (response.ok) {
+          const data = await response.json()
+          // Get top 6 cuisines by restaurant count
+          setCuisines(data.sort((a: Cuisine, b: Cuisine) => b.restaurant_count - a.restaurant_count).slice(0, 6))
+        }
+      } catch (error) {
+        console.error('Error fetching cuisines:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchCuisines()
+  }, [])
+
+  const popularAreas = useMemo(() => [
+    { name: 'Katy', count: 34, to: '/restaurants?area=katy' },
+    { name: 'Cinco Ranch', count: 28, to: '/restaurants?area=cinco-ranch' },
     { name: 'Mason Creek', count: 22, to: '/restaurants?area=mason-creek' },
     { name: 'Cross Creek Ranch', count: 19, to: '/restaurants?area=cross-creek-ranch' },
-  ]
+  ], [])
 
   return (
     <section className="py-16 bg-white">
@@ -44,22 +64,34 @@ export default function SearchSection() {
             </div>
             
             <div className="grid grid-cols-2 gap-4">
-              {popularCuisines.map((cuisine) => (
-                <Link
-                  key={cuisine.name}
-                  to={cuisine.to}
-                  className="group p-4 border border-gray-200 rounded-lg hover:border-ekaty-200 hover:bg-ekaty-50 transition-all duration-200"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="font-medium text-gray-900 group-hover:text-ekaty-700">
-                      {cuisine.name}
-                    </span>
-                    <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded group-hover:bg-ekaty-200 group-hover:text-ekaty-700">
-                      {cuisine.count}
-                    </span>
+              {loading ? (
+                // Loading skeleton
+                Array.from({ length: 6 }).map((_, index) => (
+                  <div key={index} className="p-4 border border-gray-200 rounded-lg animate-pulse">
+                    <div className="flex items-center justify-between">
+                      <div className="h-4 bg-gray-200 rounded w-16"></div>
+                      <div className="h-6 bg-gray-200 rounded w-8"></div>
+                    </div>
                   </div>
-                </Link>
-              ))}
+                ))
+              ) : (
+                cuisines.map((cuisine) => (
+                  <Link
+                    key={cuisine.id}
+                    to={`/restaurants?cuisine=${cuisine.name.toLowerCase()}`}
+                    className="group p-4 border border-gray-200 rounded-lg hover:border-ekaty-200 hover:bg-ekaty-50 transition-all duration-200"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="font-medium text-gray-900 group-hover:text-ekaty-700">
+                        {cuisine.name}
+                      </span>
+                      <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded group-hover:bg-ekaty-200 group-hover:text-ekaty-700">
+                        {cuisine.restaurant_count}
+                      </span>
+                    </div>
+                  </Link>
+                ))
+              )}
             </div>
             
             <div className="mt-6">
@@ -157,4 +189,6 @@ export default function SearchSection() {
       </div>
     </section>
   )
-}
+})
+
+export default SearchSection

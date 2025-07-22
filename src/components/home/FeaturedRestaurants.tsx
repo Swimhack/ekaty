@@ -1,3 +1,4 @@
+import { memo, useMemo, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { Star, MapPin, Clock, Phone, ChefHat } from 'lucide-react'
 
@@ -24,37 +25,60 @@ interface FeaturedRestaurantsProps {
   restaurants: Restaurant[]
 }
 
-export default function FeaturedRestaurants({ restaurants }: FeaturedRestaurantsProps) {
-  const renderStars = (rating: number) => {
-    const stars = []
+// Memoized StarRating component
+const StarRating = memo(({ rating }: { rating: number }) => {
+  const stars = useMemo(() => {
+    const starsArray = []
     const fullStars = Math.floor(rating)
     const hasHalfStar = rating % 1 >= 0.5
 
     for (let i = 0; i < fullStars; i++) {
-      stars.push(
+      starsArray.push(
         <Star key={i} size={16} className="fill-yellow-400 text-yellow-400" />
       )
     }
 
     if (hasHalfStar) {
-      stars.push(
+      starsArray.push(
         <Star key="half" size={16} className="fill-yellow-400 text-yellow-400 opacity-50" />
       )
     }
 
     const emptyStars = 5 - Math.ceil(rating)
     for (let i = 0; i < emptyStars; i++) {
-      stars.push(
+      starsArray.push(
         <Star key={`empty-${i}`} size={16} className="text-gray-300" />
       )
     }
 
-    return stars
-  }
+    return starsArray
+  }, [rating])
 
-  const renderPriceRange = (range: number) => {
-    return '$'.repeat(range) + '$'.repeat(4 - range)
-  }
+  return <div className="flex items-center gap-1">{stars}</div>
+})
+StarRating.displayName = 'StarRating'
+
+// Memoized PriceRange component
+const PriceRange = memo(({ range }: { range: number }) => {
+  const priceDisplay = useMemo(() => {
+    return '$'.repeat(range) + '$'.repeat(Math.max(0, 4 - range))
+  }, [range])
+
+  return <span>{priceDisplay}</span>
+})
+PriceRange.displayName = 'PriceRange'
+
+const FeaturedRestaurants = memo(function FeaturedRestaurants({ restaurants }: FeaturedRestaurantsProps) {
+  const handleImageError = useCallback((e: React.SyntheticEvent<HTMLImageElement>) => {
+    const target = e.target as HTMLImageElement;
+    target.style.display = 'none';
+    target.nextElementSibling?.classList.remove('hidden');
+  }, [])
+
+  const handleLogoError = useCallback((e: React.SyntheticEvent<HTMLImageElement>) => {
+    const target = e.target as HTMLImageElement;
+    target.style.display = 'none';
+  }, [])
 
   if (!restaurants || restaurants.length === 0) {
     return (
@@ -93,22 +117,21 @@ export default function FeaturedRestaurants({ restaurants }: FeaturedRestaurants
             >
               {/* Restaurant image */}
               <div className="relative h-48 bg-gray-200">
-                {restaurant.cover_image_url ? (
-                  <img
-                    src={restaurant.cover_image_url}
-                    alt={restaurant.name}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                    <ChefHat size={48} className="text-gray-400" />
-                  </div>
-                )}
+                <img
+                  src={restaurant.cover_image_url}
+                  alt={restaurant.name}
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                  onError={handleImageError}
+                />
+                <div className="hidden w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center absolute inset-0">
+                  <ChefHat size={48} className="text-gray-400" />
+                </div>
                 
                 {/* Price range badge */}
                 <div className="absolute top-4 right-4">
                   <span className="bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full text-sm font-medium text-gray-700">
-                    {renderPriceRange(restaurant.price_range)}
+                    <PriceRange range={restaurant.price_range} />
                   </span>
                 </div>
               </div>
@@ -121,20 +144,20 @@ export default function FeaturedRestaurants({ restaurants }: FeaturedRestaurants
                     <h3 className="text-xl font-bold text-gray-900 line-clamp-1">
                       {restaurant.name}
                     </h3>
-                    {restaurant.logo_url && (
+                    {restaurant.logo_url && restaurant.logo_url !== '/images/no_profile_img.jpg' && (
                       <img
                         src={restaurant.logo_url}
                         alt={`${restaurant.name} logo`}
                         className="w-8 h-8 rounded-full object-cover"
+                        loading="lazy"
+                        onError={handleLogoError}
                       />
                     )}
                   </div>
                   
                   {/* Rating and reviews */}
                   <div className="flex items-center gap-2 mb-2">
-                    <div className="flex items-center gap-1">
-                      {renderStars(restaurant.average_rating)}
-                    </div>
+                    <StarRating rating={restaurant.average_rating} />
                     <span className="text-sm font-medium text-gray-700">
                       {restaurant.average_rating.toFixed(1)}
                     </span>
@@ -226,4 +249,6 @@ export default function FeaturedRestaurants({ restaurants }: FeaturedRestaurants
       </div>
     </section>
   )
-}
+})
+
+export default FeaturedRestaurants

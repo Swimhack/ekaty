@@ -36,17 +36,19 @@ export default function Footer() {
   }
 
   return (
-    <footer className="bg-gray-900 text-white">
+    <footer className="text-white" style={{ backgroundColor: '#1A2874' }}>
       {/* Main footer content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* Company info */}
           <div className="lg:col-span-1">
-            <div className="flex items-center space-x-2 mb-4">
-              <div className="w-8 h-8 bg-ekaty-500 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">eK</span>
-              </div>
-              <span className="font-display font-semibold text-xl">
+            <div className="mb-4">
+              <img 
+                src="/images/logo_new.jpg" 
+                alt="eKaty.com"
+                className="h-16 w-auto mb-3"
+              />
+              <span className="font-display font-semibold text-xl text-white">
                 eKaty.com
               </span>
             </div>
