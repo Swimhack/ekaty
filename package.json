@@ -13,6 +13,7 @@
     "api-server": "node server/mock-api.js"
   },
   "dependencies": {
+    "@googlemaps/places": "^2.1.0",
     "@types/node": "^20.0.0",
     "@types/react": "^18.3.23",
     "@types/react-dom": "^18.3.7",

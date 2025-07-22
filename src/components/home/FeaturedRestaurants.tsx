@@ -121,7 +121,6 @@ const FeaturedRestaurants = memo(function FeaturedRestaurants({ restaurants }: F
                   src={restaurant.cover_image_url}
                   alt={restaurant.name}
                   className="w-full h-full object-cover"
-                  loading="lazy"
                   onError={handleImageError}
                 />
                 <div className="hidden w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center absolute inset-0">
@@ -149,7 +148,6 @@ const FeaturedRestaurants = memo(function FeaturedRestaurants({ restaurants }: F
                         src={restaurant.logo_url}
                         alt={`${restaurant.name} logo`}
                         className="w-8 h-8 rounded-full object-cover"
-                        loading="lazy"
                         onError={handleLogoError}
                       />
                     )}
