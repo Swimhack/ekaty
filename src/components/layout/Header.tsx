@@ -28,27 +28,30 @@ export default function Header() {
 
   return (
     <>
-      <header className="shadow-lg" style={{ backgroundColor: '#1A2874' }}>
+      <header className="sticky top-0 z-50 backdrop-blur-md bg-gradient-to-r from-purple-900/95 to-indigo-900/95 shadow-xl border-b border-purple-700/30" style={{ backgroundColor: 'rgba(26, 40, 116, 0.95)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20 md:h-24">
-            {/* eKaty.com Logo */}
+          <div className="flex justify-between items-center h-18 md:h-20">
+            {/* Enhanced eKaty.com Logo */}
             <div className="flex items-center">
-              <Link to="/" className="flex items-center space-x-3 hover:opacity-90 transition-opacity">
-                <img 
-                  src="/images/logo.gif" 
-                  alt="eKaty.com - Katy Restaurant Directory"
-                  className="h-16 w-auto"
-                  onError={(e) => {
-                    // Fallback to logo_new.jpg if logo.gif fails to load
-                    const target = e.target as HTMLImageElement;
-                    target.src = '/images/logo_new.jpg';
-                  }}
-                />
+              <Link to="/" className="flex items-center space-x-4 hover:opacity-95 transition-all duration-300 group">
+                <div className="relative">
+                  <img 
+                    src="/images/logo.gif" 
+                    alt="eKaty.com - Katy Restaurant Directory"
+                    className="h-14 w-auto drop-shadow-lg group-hover:scale-105 transition-transform duration-300"
+                    onError={(e) => {
+                      // Fallback to logo_new.jpg if logo.gif fails to load
+                      const target = e.target as HTMLImageElement;
+                      target.src = '/images/logo_new.jpg';
+                    }}
+                  />
+                  <div className="absolute -inset-2 bg-white/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl"></div>
+                </div>
                 <div className="hidden sm:block">
-                  <div className="text-xl text-white font-bold">
+                  <div className="text-xl text-white font-bold tracking-wide drop-shadow-sm">
                     Restaurant Directory
                   </div>
-                  <div className="text-sm text-purple-200 font-medium">
+                  <div className="text-sm text-purple-200 font-medium tracking-wide">
                     for Katy, Texas
                   </div>
                 </div>
