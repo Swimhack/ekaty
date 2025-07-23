@@ -31,9 +31,21 @@ export default function Hero() {
   ]
 
   return (
-    <div className="relative bg-gradient-to-br from-orange-50 to-amber-50 py-16 lg:py-24">
-      {/* Background pattern */}
-      <div className="absolute inset-0 opacity-10">
+    <div className="relative bg-gradient-to-br from-orange-50 to-amber-50 py-20 lg:py-32 overflow-hidden">
+      {/* Full-width Hero Background Image extending to edges */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: 'url("/images/katywelcome.jpg")',
+          opacity: 0.3
+        }}
+      />
+      
+      {/* Gradient overlay for better text contrast */}
+      <div className="absolute inset-0 bg-gradient-to-b from-orange-900/30 via-orange-800/20 to-orange-900/40" />
+      
+      {/* Subtle pattern overlay */}
+      <div className="absolute inset-0 opacity-5">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNlYjc0MjUiIGZpbGwtb3BhY2l0eT0iMC4xIj48Y2lyY2xlIGN4PSIzMCIgY3k9IjMwIiByPSI0Ii8+PC9nPjwvZz48L3N2Zz4=')] repeat"></div>
       </div>
 
@@ -48,22 +60,22 @@ export default function Hero() {
             />
           </div>
           
-          {/* Classic Welcome Message */}
-          <h1 className="text-3xl md:text-5xl font-display font-bold text-gray-900 mb-4">
+          {/* Welcome Message with enhanced contrast */}
+          <h1 className="text-3xl md:text-5xl font-display font-bold text-white mb-4 drop-shadow-lg">
             Welcome to eKaty.com
           </h1>
           
-          <h2 className="text-xl md:text-2xl font-semibold text-orange-600 mb-2">
+          <h2 className="text-xl md:text-2xl font-semibold text-orange-100 mb-2 drop-shadow-md">
             Everything Katy - Community Driven
           </h2>
           
-          <p className="text-lg text-gray-700 mb-8 max-w-2xl mx-auto">
+          <p className="text-lg text-white/90 mb-8 max-w-2xl mx-auto drop-shadow-md">
             Your comprehensive guide to restaurants, dining, and community in Katy, Texas
           </p>
 
           {/* Search Section */}
           <form onSubmit={handleSearch} className="max-w-4xl mx-auto mb-12">
-            <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+            <div className="bg-white/95 backdrop-blur-sm rounded-xl shadow-2xl p-6 border border-white/20">
               <h3 className="text-2xl font-bold text-gray-800 mb-4 text-center">Find Restaurants in Katy</h3>
               
               <div className="flex flex-col lg:flex-row gap-4">
@@ -110,25 +122,25 @@ export default function Hero() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto mb-8">
             <button
               onClick={() => navigate('/restaurants')}
-              className="bg-white hover:bg-orange-50 text-gray-800 hover:text-orange-600 font-medium py-3 px-4 rounded-lg border border-gray-200 hover:border-orange-300 transition-all duration-200 shadow-sm hover:shadow-md"
+              className="bg-white/95 backdrop-blur-sm hover:bg-white text-gray-800 hover:text-orange-600 font-medium py-3 px-4 rounded-lg border border-white/30 hover:border-orange-300 transition-all duration-200 shadow-lg hover:shadow-xl"
             >
               All Restaurants
             </button>
             <button
               onClick={() => navigate('/popular')}
-              className="bg-white hover:bg-orange-50 text-gray-800 hover:text-orange-600 font-medium py-3 px-4 rounded-lg border border-gray-200 hover:border-orange-300 transition-all duration-200 shadow-sm hover:shadow-md"
+              className="bg-white/95 backdrop-blur-sm hover:bg-white text-gray-800 hover:text-orange-600 font-medium py-3 px-4 rounded-lg border border-white/30 hover:border-orange-300 transition-all duration-200 shadow-lg hover:shadow-xl"
             >
               Most Popular
             </button>
             <button
               onClick={() => navigate('/cuisines')}
-              className="bg-white hover:bg-orange-50 text-gray-800 hover:text-orange-600 font-medium py-3 px-4 rounded-lg border border-gray-200 hover:border-orange-300 transition-all duration-200 shadow-sm hover:shadow-md"
+              className="bg-white/95 backdrop-blur-sm hover:bg-white text-gray-800 hover:text-orange-600 font-medium py-3 px-4 rounded-lg border border-white/30 hover:border-orange-300 transition-all duration-200 shadow-lg hover:shadow-xl"
             >
               By Cuisine
             </button>
             <button
               onClick={() => navigate('/areas')}
-              className="bg-white hover:bg-orange-50 text-gray-800 hover:text-orange-600 font-medium py-3 px-4 rounded-lg border border-gray-200 hover:border-orange-300 transition-all duration-200 shadow-sm hover:shadow-md"
+              className="bg-white/95 backdrop-blur-sm hover:bg-white text-gray-800 hover:text-orange-600 font-medium py-3 px-4 rounded-lg border border-white/30 hover:border-orange-300 transition-all duration-200 shadow-lg hover:shadow-xl"
             >
               By Area
             </button>
@@ -136,8 +148,8 @@ export default function Hero() {
 
           {/* Popular Search Tags */}
           <div className="text-center">
-            <div className="text-gray-600 font-medium text-sm mb-3">Popular searches:</div>
-            <div className="flex flex-wrap justify-center gap-2">
+            <div className="text-white/80 font-medium text-sm mb-3 drop-shadow">Popular searches:</div>
+            <div className="flex flex-wrap justify-center gap-3">
               {['Pizza', 'Mexican', 'BBQ', 'Sushi', 'Steakhouse'].map((tag) => (
                 <button
                   key={tag}
@@ -147,7 +159,7 @@ export default function Hero() {
                     params.set('q', tag.toLowerCase())
                     navigate(`/restaurants?${params.toString()}`)
                   }}
-                  className="text-orange-600 hover:text-orange-700 font-medium transition-colors duration-200"
+                  className="bg-white/20 hover:bg-white/30 text-white font-medium px-3 py-1 rounded-full border border-white/30 hover:border-white/50 transition-all duration-200 backdrop-blur-sm"
                 >
                   {tag}
                 </button>
