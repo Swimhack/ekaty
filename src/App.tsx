@@ -15,6 +15,7 @@ const Contact = lazy(() => import('./pages/Contact'))
 const Cuisines = lazy(() => import('./pages/Cuisines'))
 const Areas = lazy(() => import('./pages/Areas'))
 const Reviews = lazy(() => import('./pages/Reviews'))
+const Community = lazy(() => import('./pages/Community'))
 
 // Loading component
 const LoadingSpinner = () => (
@@ -39,6 +40,7 @@ function App() {
               <Route path="/cuisines" element={<Cuisines />} />
               <Route path="/areas" element={<Areas />} />
               <Route path="/reviews" element={<Reviews />} />
+              <Route path="/community" element={<Community />} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
             </Routes>

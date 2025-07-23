@@ -20,6 +20,7 @@ export default function Header() {
     { name: 'Map', to: '/map' },
     { name: 'Grub Roulette', to: '/grub-roulette' },
     { name: 'All Restaurants', to: '/restaurants' },
+    { name: 'Community', to: '/community' },
     { name: 'About', to: '/about' },
     { name: 'Contact', to: '/contact' },
   ]
