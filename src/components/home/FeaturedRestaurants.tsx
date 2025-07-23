@@ -208,7 +208,7 @@ const FeaturedRestaurants = memo(function FeaturedRestaurants({ restaurants }: F
                   </div>
                   
                   <Link
-                    to={`/restaurants/${restaurant.slug}`}
+                    to={`/restaurant/${restaurant.slug}`}
                     className="btn-primary text-sm"
                   >
                     View Details
