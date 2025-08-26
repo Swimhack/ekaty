@@ -98,11 +98,13 @@ load_environment() {
     
     # Validate required environment variables
     required_vars=(
-        "NEXT_PUBLIC_SUPABASE_URL"
-        "NEXT_PUBLIC_SUPABASE_ANON_KEY"
+        "VITE_SUPABASE_URL"
+        "VITE_SUPABASE_ANON_KEY"
+        "VITE_APP_URL"
+        "VITE_APP_NAME"
+        "VITE_GOOGLE_PLACES_API_KEY"
         "SUPABASE_SERVICE_ROLE_KEY"
-        "RESEND_API_KEY"
-        "NEXT_PUBLIC_APP_URL"
+        "GOOGLE_PLACES_API_KEY"
     )
     
     source .env.local
@@ -223,11 +225,11 @@ main() {
     setup_logging
     
     success "🎉 Deployment completed successfully!"
-    log "eKaty.com is now running at: $NEXT_PUBLIC_APP_URL"
+    log "eKaty.com is now running at: $VITE_APP_URL"
     
     echo ""
     echo "📊 Deployment Summary:"
-    echo "- Application URL: $NEXT_PUBLIC_APP_URL"
+    echo "- Application URL: $VITE_APP_URL"
     echo "- Log file: $LOG_FILE"
     echo "- Backup directory: $BACKUP_DIR"
     echo ""
