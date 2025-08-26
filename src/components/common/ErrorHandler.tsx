@@ -4,14 +4,14 @@ import { AlertCircle, RefreshCw, Wifi, WifiOff, AlertTriangle } from 'lucide-rea
 export interface ErrorState {
   hasError: boolean
   error: Error | null
-  errorType: 'network' | 'api' | 'generic' | 'timeout'
+  errorType: 'network' | 'api' | 'generic' | 'timeout' | 'cloudflare'
   retryCount: number
   isRetrying: boolean
 }
 
 export interface ErrorHandlerProps {
   error?: Error | null
-  errorType?: 'network' | 'api' | 'generic' | 'timeout'
+  errorType?: 'network' | 'api' | 'generic' | 'timeout' | 'cloudflare'
   onRetry?: () => void | Promise<void>
   maxRetries?: number
   showRetryButton?: boolean
@@ -135,6 +135,14 @@ export function ErrorHandler({
           title: 'Request Timed Out',
           message: 'The request took too long to complete.',
           suggestion: 'This might be due to slow connection. Please try again.'
+        }
+      
+      case 'cloudflare':
+        return {
+          icon: AlertCircle,
+          title: 'Cloudflare Timeout',
+          message: 'Connection timed out through Cloudflare network.',
+          suggestion: 'This is usually temporary. Please wait a moment and try again.'
         }
       
       case 'api':

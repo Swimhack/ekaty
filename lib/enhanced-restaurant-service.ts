@@ -32,15 +32,18 @@ interface RetryConfig {
 }
 
 const DEFAULT_RETRY_CONFIG: RetryConfig = {
-  maxRetries: 3,
-  initialDelay: 1000,
-  maxDelay: 10000,
-  backoffFactor: 2,
+  maxRetries: 5,
+  initialDelay: 500,
+  maxDelay: 8000,
+  backoffFactor: 1.5,
   retryOn: (error: Error) => {
-    // Retry on network errors, timeouts, and 5xx server errors
+    // Retry on network errors, timeouts, Cloudflare errors, and 5xx server errors
     return (
       error instanceof NetworkError ||
       error instanceof TimeoutError ||
+      error.message.toLowerCase().includes('cloudflare') ||
+      error.message.toLowerCase().includes('timeout') ||
+      error.message.toLowerCase().includes('connection') ||
       (error instanceof APIError && error.status !== undefined && error.status >= 500)
     )
   }
@@ -86,7 +89,8 @@ async function withRetry<T>(
 
 // Enhanced restaurant service with retry logic and better error handling
 export class EnhancedRestaurantService {
-  private static readonly TIMEOUT_MS = 10000 // 10 seconds
+  private static readonly TIMEOUT_MS = 30000 // Extended to 30 seconds for Cloudflare
+  private static readonly CF_TIMEOUT_MS = 45000 // Extended timeout for CF issues
 
   static async getRestaurants(
     filters: RestaurantFilters = {},
@@ -179,9 +183,18 @@ export class EnhancedRestaurantService {
     return restaurant || null
   }
 
-  // Transform various errors into our custom error types
+  // Transform various errors into our custom error types with Cloudflare handling
   private static transformError(error: Error): Error {
     const errorMessage = error.message.toLowerCase()
+
+    // Cloudflare-specific errors
+    if (errorMessage.includes('cloudflare') ||
+        errorMessage.includes('cf-ray') ||
+        errorMessage.includes('connection timed out') ||
+        errorMessage.includes('522') ||
+        errorMessage.includes('524')) {
+      return new TimeoutError('Cloudflare connection timeout. Retrying with extended timeout...')
+    }
 
     if (errorMessage.includes('failed to fetch') || 
         errorMessage.includes('network') ||
@@ -189,7 +202,7 @@ export class EnhancedRestaurantService {
       return new NetworkError('Network connection failed. Please check your internet connection.')
     }
 
-    if (error.name === 'TimeoutError') {
+    if (error.name === 'TimeoutError' || errorMessage.includes('timeout') || errorMessage.includes('aborted')) {
       return new TimeoutError('Request timed out. Please try again.')
     }
 

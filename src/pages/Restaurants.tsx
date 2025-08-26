@@ -53,9 +53,28 @@ export default function Restaurants() {
       }
     } catch (error) {
       console.error('Error fetching data:', error)
-      const errorType = error instanceof Error && error.name ? 
-        (error.name === 'NetworkError' ? 'network' : 
-         error.name === 'TimeoutError' ? 'timeout' : 'api') : 'generic'
+      const errorMessage = error instanceof Error ? error.message.toLowerCase() : ''
+      
+      // Classify error type with Cloudflare detection
+      let errorType: 'network' | 'api' | 'timeout' | 'cloudflare' | 'generic' = 'generic'
+      
+      if (error instanceof Error && error.name) {
+        switch (error.name) {
+          case 'NetworkError':
+            errorType = 'network'
+            break
+          case 'TimeoutError':
+            errorType = errorMessage.includes('cloudflare') || 
+                       errorMessage.includes('cf-ray') ||
+                       errorMessage.includes('connection timed out') ? 'cloudflare' : 'timeout'
+            break
+          default:
+            errorType = 'api'
+        }
+      } else if (errorMessage.includes('cloudflare') || errorMessage.includes('timeout')) {
+        errorType = 'cloudflare'
+      }
+      
       setError(error as Error, errorType)
     } finally {
       setLoading(false)
