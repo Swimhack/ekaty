@@ -1,10 +1,10 @@
-# Netlify Deployment Guide for eKaty.com
+# Netlify Deployment Guide for eKaty.com (Vite React SPA)
 
-This guide provides step-by-step instructions for deploying eKaty.com to Netlify with GitHub continuous deployment.
+This guide provides step-by-step instructions for deploying the Vite React SPA eKaty.com to Netlify with GitHub continuous deployment.
 
 ## 🚀 Quick Deploy (Zero Configuration)
 
-The project is pre-configured for seamless Netlify deployment. Just import from GitHub and deploy!
+The project is now properly configured for Vite React SPA deployment. Just import from GitHub and deploy!
 
 ### Import from GitHub
 1. Go to [Netlify Dashboard](https://app.netlify.com)
@@ -20,31 +20,38 @@ All deployment settings are automatically configured via `netlify.toml`:
 
 ### Build Settings
 - **Build command:** `npm run build`
-- **Publish directory:** `out`
+- **Publish directory:** `dist` (Vite output directory)
 - **Node version:** 18
-- **Functions directory:** `netlify/functions`
+- **SPA routing:** Configured with _redirects file
+
+### Critical SPA Routing Configuration
+The `/*` to `/index.html` redirect ensures React Router routes work correctly:
+
+```toml
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+```
 
 ### Environment Variables
-Copy these from `.env.netlify` to your Netlify site settings:
+Copy these from `.env.netlify` to your Netlify site settings (using VITE_ prefix for Vite apps):
 
 ```bash
-# Required - Supabase
-NEXT_PUBLIC_SUPABASE_URL=https://sctaykgcfkhadowygrj.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+# Required - Supabase (corrected URL and keys)
+VITE_SUPABASE_URL=https://sixzqokachwkcvsqpxoq.supabase.co
+VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNpeHpxb2thY2h3a2N2c3FweG9xIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIwNzc5NTUsImV4cCI6MjA1NzY1Mzk1NX0.7oUA3DNoEjihJ4eR9yNpTX3OeMT--uYTIZoN7o54goM
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNpeHpxb2thY2h3a2N2c3FweG9xIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0MjA3Nzk1NSwiZXhwIjoyMDU3NjUzOTU1fQ.6JZVNCbl-zCOvbxf5e9G1XoXFsZdP3eCFbqlegIWR4c
 
-# Required - Application
-NEXT_PUBLIC_APP_URL=https://your-site-name.netlify.app
-NEXT_PUBLIC_APP_NAME=eKaty.com
+# Required - Application (VITE_ prefix for client-side)
+VITE_APP_URL=https://ekaty.com
+VITE_APP_NAME=eKaty.com
 NODE_ENV=production
 
-# Required - Services
-RESEND_API_KEY=re_37YYP2iE_KbLqkdskcjngf9XqFMJZv1xG
-NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=AIzaSyA7Ic5d7Uzr8XgYBPWtMB4Z8UDFnjpWypo
-
-# Optional - Future features
-STRIPE_PUBLISHABLE_KEY=pk_live_...
-NEXTAUTH_SECRET=your-secret-key
+# Required - Services (VITE_ prefix for client-side)
+VITE_GOOGLE_MAPS_API_KEY=AIzaSyA7Ic5d7Uzr8XgYBPWtMB4Z8UDFnjpWypo
+VITE_GOOGLE_PLACES_API_KEY=AIzaSyA7Ic5d7Uzr8XgYBPWtMB4Z8UDFnjpWypo
+GOOGLE_PLACES_API_KEY=AIzaSyA7Ic5d7Uzr8XgYBPWtMB4Z8UDFnjpWypo
 ```
 
 ## 🔧 Manual Configuration (if needed)
