@@ -1,6 +1,8 @@
 import { memo, useMemo, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { Star, MapPin, Clock, Phone, ChefHat } from 'lucide-react'
+import { FeaturedRestaurantsSkeleton } from '../common/LoadingSkeletons'
+import ErrorHandler from '../common/ErrorHandler'
 
 interface Restaurant {
   id: number
@@ -23,6 +25,9 @@ interface Restaurant {
 
 interface FeaturedRestaurantsProps {
   restaurants: Restaurant[]
+  loading?: boolean
+  error?: Error | null
+  onRetry?: () => void
 }
 
 // Memoized StarRating component
@@ -68,7 +73,7 @@ const PriceRange = memo(({ range }: { range: number }) => {
 })
 PriceRange.displayName = 'PriceRange'
 
-const FeaturedRestaurants = memo(function FeaturedRestaurants({ restaurants }: FeaturedRestaurantsProps) {
+const FeaturedRestaurants = memo(function FeaturedRestaurants({ restaurants, loading = false, error = null, onRetry }: FeaturedRestaurantsProps) {
   const handleImageError = useCallback((e: React.SyntheticEvent<HTMLImageElement>) => {
     const target = e.target as HTMLImageElement;
     target.style.display = 'none';
@@ -80,15 +85,53 @@ const FeaturedRestaurants = memo(function FeaturedRestaurants({ restaurants }: F
     target.style.display = 'none';
   }, [])
 
-  if (!restaurants || restaurants.length === 0) {
+  // Show loading skeleton
+  if (loading) {
+    return <FeaturedRestaurantsSkeleton />
+  }
+
+  // Show error state
+  if (error) {
     return (
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h2 className="text-3xl md:text-4xl font-display font-bold text-gray-900 mb-4">
+      <section className="py-12 sm:py-16 bg-white">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-gray-900 mb-4">
               Featured Restaurants
             </h2>
-            <p className="text-gray-600">No restaurants available at the moment.</p>
+          </div>
+          <ErrorHandler 
+            error={error}
+            errorType={error.name === 'NetworkError' ? 'network' : 'api'}
+            onRetry={onRetry}
+            size="medium"
+          />
+        </div>
+      </section>
+    )
+  }
+
+  if (!restaurants || restaurants.length === 0) {
+    return (
+      <section className="py-12 sm:py-16 bg-white">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-gray-900 mb-4">
+              Featured Restaurants
+            </h2>
+            <div className="max-w-md mx-auto">
+              <ChefHat size={48} className="mx-auto text-gray-400 mb-4" />
+              <p className="text-gray-600 mb-4">No featured restaurants available at the moment.</p>
+              {onRetry && (
+                <button
+                  onClick={onRetry}
+                  className="btn-primary"
+                  aria-label="Refresh featured restaurants"
+                >
+                  Refresh
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </section>
@@ -96,27 +139,27 @@ const FeaturedRestaurants = memo(function FeaturedRestaurants({ restaurants }: F
   }
 
   return (
-    <section className="py-16 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-12 sm:py-16 bg-white">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section header */}
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-display font-bold text-gray-900 mb-4">
+        <div className="text-center mb-8 sm:mb-12 px-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-gray-900 mb-3 sm:mb-4">
             Featured Restaurants
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto">
             Discover the top-rated dining spots that make Katy special
           </p>
         </div>
 
         {/* Featured restaurants grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-8 sm:mb-12 w-full">
           {restaurants.map((restaurant) => (
             <div
               key={restaurant.id}
-              className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow duration-300"
+              className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow duration-300 w-full max-w-full"
             >
               {/* Restaurant image */}
-              <div className="relative h-48 bg-gray-200">
+              <div className="relative h-40 sm:h-48 bg-gray-200 w-full overflow-hidden">
                 <img
                   src={restaurant.cover_image_url}
                   alt={restaurant.name}
@@ -136,18 +179,18 @@ const FeaturedRestaurants = memo(function FeaturedRestaurants({ restaurants }: F
               </div>
 
               {/* Restaurant details */}
-              <div className="p-6">
+              <div className="p-4 sm:p-6 w-full min-w-0">
                 {/* Header */}
-                <div className="mb-4">
-                  <div className="flex items-start justify-between mb-2">
-                    <h3 className="text-xl font-bold text-gray-900 line-clamp-1">
+                <div className="mb-4 min-w-0">
+                  <div className="flex items-start justify-between mb-2 min-w-0">
+                    <h3 className="text-lg sm:text-xl font-bold text-gray-900 line-clamp-1 min-w-0 flex-1 pr-2">
                       {restaurant.name}
                     </h3>
                     {restaurant.logo_url && restaurant.logo_url !== '/images/no_profile_img.jpg' && (
                       <img
                         src={restaurant.logo_url}
                         alt={`${restaurant.name} logo`}
-                        className="w-8 h-8 rounded-full object-cover"
+                        className="w-8 h-8 rounded-full object-cover flex-shrink-0"
                         onError={handleLogoError}
                       />
                     )}
@@ -201,15 +244,15 @@ const FeaturedRestaurants = memo(function FeaturedRestaurants({ restaurants }: F
                 </div>
 
                 {/* Action buttons */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-sm text-gray-500">
-                    <MapPin size={14} />
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0">
+                  <div className="flex items-center gap-2 text-sm text-gray-500 min-w-0 flex-1">
+                    <MapPin size={14} className="flex-shrink-0" />
                     <span className="truncate">{restaurant.address}</span>
                   </div>
                   
                   <Link
                     to={`/restaurant/${restaurant.slug}`}
-                    className="btn-primary text-sm"
+                    className="btn-primary text-sm w-full sm:w-auto text-center flex-shrink-0"
                   >
                     View Details
                   </Link>

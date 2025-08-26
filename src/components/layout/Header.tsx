@@ -1,5 +1,5 @@
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { Menu, X, Search, User, ChevronDown } from 'lucide-react'
 import SearchModal from '@/components/search/SearchModal'
@@ -14,6 +14,23 @@ export default function Header() {
   const handleSignOut = async () => {
     setIsUserMenuOpen(false)
   }
+
+  // Handle click outside to close mobile menu
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (isMenuOpen && !(event.target as Element).closest('.mobile-menu') && !(event.target as Element).closest('button[aria-expanded]')) {
+        setIsMenuOpen(false)
+      }
+    }
+
+    if (isMenuOpen) {
+      document.addEventListener('click', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside)
+    }
+  }, [isMenuOpen])
 
   const navigation = [
     { name: 'Popular', to: '/popular' },
@@ -30,16 +47,16 @@ export default function Header() {
   return (
     <>
       <header className="sticky top-0 z-50 backdrop-blur-md bg-white/95 shadow-xl border-b border-orange-200/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-18 md:h-20">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16 sm:h-18 md:h-20 min-w-0">
             {/* Enhanced eKaty.com Logo */}
-            <div className="flex items-center">
-              <Link to="/" className="flex items-center space-x-4 hover:opacity-95 transition-all duration-300 group">
-                <div className="relative">
+            <div className="flex items-center min-w-0 flex-shrink-0">
+              <Link to="/" className="flex items-center space-x-2 sm:space-x-4 hover:opacity-95 transition-all duration-300 group min-w-0">
+                <div className="relative flex-shrink-0">
                   <img 
                     src="/images/logo.gif" 
                     alt="eKaty.com - Katy Restaurant Directory"
-                    className="h-14 w-auto drop-shadow-lg group-hover:scale-105 transition-transform duration-300"
+                    className="h-10 sm:h-12 md:h-14 w-auto drop-shadow-lg group-hover:scale-105 transition-transform duration-300"
                     onError={(e) => {
                       // Fallback to logo_new.jpg if logo.gif fails to load
                       const target = e.target as HTMLImageElement;
@@ -48,11 +65,11 @@ export default function Header() {
                   />
                   <div className="absolute -inset-2 bg-white/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl"></div>
                 </div>
-                <div className="hidden sm:block">
-                  <div className="text-xl text-gray-800 font-bold tracking-wide">
+                <div className="hidden sm:block min-w-0">
+                  <div className="text-base sm:text-lg md:text-xl text-gray-800 font-bold tracking-wide truncate">
                     Restaurant Directory
                   </div>
-                  <div className="text-sm text-orange-600 font-medium tracking-wide">
+                  <div className="text-xs sm:text-sm text-orange-600 font-medium tracking-wide">
                     for Katy, Texas
                   </div>
                 </div>
@@ -60,7 +77,7 @@ export default function Header() {
             </div>
 
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center space-x-6">
+            <nav className="hidden lg:flex items-center space-x-4 xl:space-x-6 min-w-0 flex-shrink">
               {navigation.map((item) => (
                 <Link
                   key={item.name}
@@ -69,7 +86,7 @@ export default function Header() {
                     isActive(item.to) 
                       ? 'text-orange-600 bg-orange-50 border-b-2 border-orange-500' 
                       : 'text-gray-700 hover:text-orange-600 hover:bg-orange-50/50'
-                  } font-medium transition-all duration-200 px-3 py-2 rounded-t-lg border-b-2 border-transparent`}
+                  } font-medium transition-all duration-200 px-2 xl:px-3 py-2 rounded-t-lg border-b-2 border-transparent text-sm xl:text-base whitespace-nowrap`}
                 >
                   {item.name}
                 </Link>
@@ -77,7 +94,7 @@ export default function Header() {
             </nav>
 
             {/* Right side actions */}
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 sm:space-x-3 md:space-x-4 flex-shrink-0">
               {/* Search button */}
               <button
                 onClick={() => setIsSearchOpen(true)}
@@ -135,16 +152,16 @@ export default function Header() {
                   )}
                 </div>
               ) : (
-                <div className="flex items-center space-x-3">
+                <div className="hidden sm:flex items-center space-x-2 md:space-x-3">
                   <Link
                     to="/auth/login"
-                    className="text-gray-700 hover:text-orange-600 transition-colors px-3 py-2 rounded-lg hover:bg-orange-50"
+                    className="text-gray-700 hover:text-orange-600 transition-colors px-2 md:px-3 py-2 rounded-lg hover:bg-orange-50 text-sm md:text-base"
                   >
                     Sign In
                   </Link>
                   <Link
                     to="/auth/register"
-                    className="bg-orange-500 text-white hover:bg-orange-600 font-medium px-4 py-2 rounded-lg transition-colors duration-200"
+                    className="bg-orange-500 text-white hover:bg-orange-600 font-medium px-3 md:px-4 py-2 rounded-lg transition-colors duration-200 text-sm md:text-base"
                   >
                     Sign Up
                   </Link>
@@ -154,10 +171,11 @@ export default function Header() {
               {/* Mobile menu button */}
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="md:hidden p-2 text-gray-600 hover:text-orange-600 transition-colors bg-orange-50 hover:bg-orange-100 rounded-lg"
-                aria-label="Toggle menu"
+                className="lg:hidden p-2 sm:p-3 text-gray-700 hover:text-orange-600 transition-all duration-200 bg-orange-50 hover:bg-orange-100 rounded-lg shadow-sm active:scale-95"
+                aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+                aria-expanded={isMenuOpen}
               >
-                {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
+                {isMenuOpen ? <X size={20} className="sm:w-6 sm:h-6" /> : <Menu size={20} className="sm:w-6 sm:h-6" />}
               </button>
             </div>
           </div>
@@ -165,43 +183,62 @@ export default function Header() {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden border-t border-orange-200">
-            <div className="px-2 pt-2 pb-3 space-y-1 bg-white">
-              {navigation.map((item) => (
+          <div 
+            className="mobile-menu lg:hidden border-t border-orange-200 relative z-50 bg-white shadow-xl animate-in slide-in-from-top duration-200"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="px-4 pt-4 pb-6 space-y-2 bg-white max-h-screen overflow-y-auto w-full">
+              {navigation.map((item, index) => (
                 <Link
                   key={item.name}
                   to={item.to}
-                  className={`block px-3 py-2 rounded-md transition-colors ${
+                  className={`block px-4 py-3 rounded-lg text-base font-medium transition-all duration-200 transform ${
                     isActive(item.to)
-                      ? 'text-orange-600 bg-orange-100'
-                      : 'text-gray-700 hover:text-orange-600 hover:bg-orange-50'
+                      ? 'text-orange-600 bg-orange-100 border-l-4 border-orange-500 shadow-sm'
+                      : 'text-gray-700 hover:text-orange-600 hover:bg-orange-50 border-l-4 border-transparent hover:scale-[1.02] active:scale-95'
                   }`}
                   onClick={() => setIsMenuOpen(false)}
+                  style={{
+                    animationDelay: `${index * 50}ms`
+                  }}
                 >
                   {item.name}
                 </Link>
               ))}
               {!user && (
                 <>
-                  <hr className="my-2" />
-                  <Link
-                    to="/auth/login"
-                    className="block px-3 py-2 text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-md transition-colors"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Sign In
-                  </Link>
-                  <Link
-                    to="/auth/register"
-                    className="block px-3 py-2 text-white bg-orange-500 hover:bg-orange-600 rounded-md transition-colors font-medium"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Sign Up
-                  </Link>
+                  <hr className="my-4 border-gray-200" />
+                  <div className="space-y-2">
+                    <Link
+                      to="/auth/login"
+                      className="block px-4 py-3 text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-all duration-200 font-medium border-l-4 border-transparent hover:scale-[1.02] active:scale-95"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Sign In
+                    </Link>
+                    <Link
+                      to="/auth/register"
+                      className="block px-4 py-3 text-white bg-orange-500 hover:bg-orange-600 rounded-lg transition-all duration-200 font-medium text-center shadow-md hover:scale-[1.02] active:scale-95"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Sign Up
+                    </Link>
+                  </div>
                 </>
               )}
             </div>
           </div>
+        )}
+
+        {/* Mobile menu backdrop - inside header to respect z-index */}
+        {isMenuOpen && (
+          <div
+            className="fixed inset-0 bg-black/20 z-40 lg:hidden"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsMenuOpen(false);
+            }}
+          />
         )}
       </header>
 
@@ -211,16 +248,14 @@ export default function Header() {
         onClose={() => setIsSearchOpen(false)}
       />
 
-      {/* Overlay for dropdowns */}
-      {(isUserMenuOpen || isMenuOpen) && (
+      {/* Overlay for dropdowns - only for user menu, not mobile menu */}
+      {isUserMenuOpen && (
         <div
           className="fixed inset-0 z-40"
-          onClick={() => {
-            setIsUserMenuOpen(false)
-            setIsMenuOpen(false)
-          }}
+          onClick={() => setIsUserMenuOpen(false)}
         />
       )}
+      
     </>
   )
 }

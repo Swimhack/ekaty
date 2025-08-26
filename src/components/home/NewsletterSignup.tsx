@@ -7,40 +7,69 @@ export default function NewsletterSignup() {
   const [email, setEmail] = useState('')
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [message, setMessage] = useState('')
+  const [touched, setTouched] = useState(false)
+
+  // Email validation function
+  const validateEmail = (email: string): string | null => {
+    if (!email.trim()) {
+      return 'Please enter your email address'
+    }
+    
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email)) {
+      return 'Please enter a valid email address'
+    }
+    
+    return null
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    if (!email.trim()) {
+    // Clear previous messages
+    setMessage('')
+    
+    // Validate email
+    const validationError = validateEmail(email)
+    if (validationError) {
       setStatus('error')
-      setMessage('Please enter your email address')
+      setMessage(validationError)
       return
     }
 
     setStatus('loading')
 
     try {
-      const response = await fetch('/api/newsletter/subscribe', {
+      // Use the mock API server URL (adjust port based on environment)
+      const API_BASE_URL = import.meta.env.DEV ? 'http://localhost:8082' : ''
+      const response = await fetch(`${API_BASE_URL}/api/newsletter/subscribe`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email: email.trim() }),
       })
 
       const data = await response.json()
 
-      if (response.ok) {
+      if (response.ok && data.success) {
         setStatus('success')
-        setMessage('Thank you for subscribing! Check your email to confirm.')
+        setMessage(data.message || 'Thank you for subscribing! Check your email to confirm.')
         setEmail('')
+        
+        // Reset form after 8 seconds
+        setTimeout(() => {
+          setStatus('idle')
+          setMessage('')
+        }, 8000)
       } else {
         setStatus('error')
         setMessage(data.error || 'Something went wrong. Please try again.')
       }
     } catch (error) {
       setStatus('error')
-      setMessage('Network error. Please check your connection and try again.')
+      setMessage('Unable to connect to the server. Please check your connection and try again.')
+      console.error('Newsletter subscription error:', error)
     }
   }
 
@@ -88,17 +117,37 @@ export default function NewsletterSignup() {
           {/* Signup form */}
           <form onSubmit={handleSubmit} className="max-w-md mx-auto">
             <div className="flex flex-col sm:flex-row gap-3">
-              <input
-                type="email"
-                placeholder="Enter your email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                disabled={status === 'loading' || status === 'success'}
-                className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-ekaty-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
-              />
+              <div className="flex-1">
+                <input
+                  type="email"
+                  name="email"
+                  id="newsletter-email"
+                  placeholder="Enter your email address"
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value)
+                    if (status === 'error' && !touched) {
+                      setStatus('idle')
+                      setMessage('')
+                    }
+                  }}
+                  onBlur={() => setTouched(true)}
+                  disabled={status === 'loading' || status === 'success'}
+                  aria-label="Email address for newsletter subscription"
+                  aria-describedby={message ? 'newsletter-message' : undefined}
+                  aria-invalid={status === 'error'}
+                  className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-ekaty-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed transition-colors duration-200 ${
+                    status === 'error' && touched 
+                      ? 'border-red-300 focus:ring-red-500 focus:border-red-500' 
+                      : status === 'success'
+                      ? 'border-green-300 focus:ring-green-500 focus:border-green-500'
+                      : 'border-gray-300'
+                  }`}
+                />
+              </div>
               <button
                 type="submit"
-                disabled={status === 'loading' || status === 'success'}
+                disabled={status === 'loading' || status === 'success' || !email.trim()}
                 className="px-6 py-3 bg-ekaty-500 hover:bg-ekaty-600 disabled:bg-gray-400 text-white font-semibold rounded-lg transition-colors duration-200 whitespace-nowrap disabled:cursor-not-allowed"
               >
                 {status === 'loading' ? (
@@ -119,16 +168,20 @@ export default function NewsletterSignup() {
 
             {/* Status message */}
             {message && (
-              <div className={`mt-4 p-3 rounded-lg text-sm ${
-                status === 'success' 
-                  ? 'bg-green-50 text-green-700 border border-green-200' 
-                  : 'bg-red-50 text-red-700 border border-red-200'
-              }`}>
+              <div 
+                id="newsletter-message"
+                role={status === 'error' ? 'alert' : 'status'}
+                className={`mt-4 p-3 rounded-lg text-sm ${
+                  status === 'success' 
+                    ? 'bg-green-50 text-green-700 border border-green-200' 
+                    : 'bg-red-50 text-red-700 border border-red-200'
+                }`}
+              >
                 <div className="flex items-center gap-2">
                   {status === 'success' ? (
-                    <Check size={16} />
+                    <Check size={16} aria-hidden="true" />
                   ) : (
-                    <AlertCircle size={16} />
+                    <AlertCircle size={16} aria-hidden="true" />
                   )}
                   {message}
                 </div>

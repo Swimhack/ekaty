@@ -515,10 +515,67 @@ app.get('/api/cuisines.php', (req, res) => {
   res.json(dynamicCuisines);
 });
 
+// Newsletter subscription storage (in-memory for demo)
+const newsletterSubscribers = new Set();
+
+// Newsletter subscription endpoint
+app.post('/api/newsletter/subscribe', (req, res) => {
+  const { email } = req.body;
+
+  // Validate email
+  if (!email) {
+    return res.status(400).json({
+      success: false,
+      error: 'Email address is required'
+    });
+  }
+
+  // Basic email validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({
+      success: false,
+      error: 'Please enter a valid email address'
+    });
+  }
+
+  // Check if already subscribed
+  if (newsletterSubscribers.has(email.toLowerCase())) {
+    return res.status(400).json({
+      success: false,
+      error: 'This email address is already subscribed'
+    });
+  }
+
+  // Simulate API delay
+  setTimeout(() => {
+    // Add to subscribers
+    newsletterSubscribers.add(email.toLowerCase());
+
+    // Log subscription (in production, this would save to database)
+    console.log(`📧 New newsletter subscription: ${email}`);
+
+    res.json({
+      success: true,
+      message: 'Thank you for subscribing! Check your email to confirm.'
+    });
+  }, Math.random() * 1000 + 500); // Random delay between 500-1500ms to simulate real API
+});
+
+// Get newsletter subscribers count (for admin purposes)
+app.get('/api/newsletter/count', (req, res) => {
+  res.json({
+    count: newsletterSubscribers.size,
+    subscribers: Array.from(newsletterSubscribers)
+  });
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(`Mock API server running on http://localhost:${PORT}`);
   console.log(`Available endpoints:`);
   console.log(`  GET /api/restaurants.php - Get restaurants with filtering and pagination`);
   console.log(`  GET /api/cuisines.php - Get cuisine types`);
+  console.log(`  POST /api/newsletter/subscribe - Subscribe to newsletter`);
+  console.log(`  GET /api/newsletter/count - Get subscriber count (admin)`);
 });

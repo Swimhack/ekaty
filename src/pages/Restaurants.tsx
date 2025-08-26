@@ -1,30 +1,14 @@
 
 import { useState, useEffect, useMemo } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { Search, Filter, MapPin, Star, Phone, Clock, ChefHat } from 'lucide-react'
+import { Search, Filter, MapPin, Star, Phone, Clock, ChefHat, AlertCircle } from 'lucide-react'
 import { Link } from 'react-router-dom'
-
-interface Restaurant {
-  id: number
-  name: string
-  description: string
-  address: string
-  phone: string
-  average_rating: number
-  total_reviews: number
-  price_range: number
-  logo_url: string
-  cover_image_url: string
-  slug: string
-  primary_cuisine: { name: string }
-  secondary_cuisine?: { name: string }
-  area: { name: string }
-  delivery_available: boolean
-  takeout_available: boolean
-  kid_friendly: boolean
-  wifi_available: boolean
-  hours?: string
-}
+import { type Restaurant } from '../../lib/restaurant-service'
+import EnhancedRestaurantService from '../../lib/enhanced-restaurant-service'
+import ErrorBoundary from '@/components/common/ErrorBoundary'
+import { NetworkStatus, useErrorHandler } from '@/components/common/ErrorHandler'
+import { PageLoadingSkeleton, SearchFiltersSkeleton, SearchResultsSkeleton } from '@/components/common/LoadingSkeletons'
+import ErrorHandler from '@/components/common/ErrorHandler'
 
 interface Cuisine {
   id: number
@@ -37,45 +21,52 @@ export default function Restaurants() {
   const [restaurants, setRestaurants] = useState<Restaurant[]>([])
   const [cuisines, setCuisines] = useState<Cuisine[]>([])
   const [loading, setLoading] = useState(true)
+  const [cuisinesLoading, setCuisinesLoading] = useState(true)
+  const { errorState, setError, clearError, retry } = useErrorHandler(3)
   const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '')
   const [selectedCuisine, setSelectedCuisine] = useState(searchParams.get('cuisine') || '')
   const [selectedArea, setSelectedArea] = useState(searchParams.get('area') || '')
   const [sortBy, setSortBy] = useState('name')
 
   // Fetch restaurants and cuisines
-  useEffect(() => {
-    const fetchData = async () => {
+  const fetchData = async () => {
+    try {
+      clearError()
       setLoading(true)
-      try {
-        // Build API query parameters
-        const params = new URLSearchParams()
-        if (searchQuery) params.set('search', searchQuery)
-        if (selectedCuisine) params.set('cuisine', selectedCuisine)
-        if (selectedArea) params.set('area', selectedArea)
-        params.set('limit', '50')
+      
+      // Fetch restaurants and cuisines in parallel
+      const [restaurantsResponse, cuisinesData] = await Promise.all([
+        EnhancedRestaurantService.getRestaurants({
+          search: searchQuery || undefined,
+          cuisine: selectedCuisine || undefined,
+          area: selectedArea || undefined,
+          limit: 50,
+          offset: 0
+        }),
+        cuisinesLoading ? EnhancedRestaurantService.getCuisines() : Promise.resolve(cuisines)
+      ])
 
-        // Fetch restaurants and cuisines in parallel
-        const [restaurantsRes, cuisinesRes] = await Promise.all([
-          fetch(`/api/restaurants.php?${params.toString()}`),
-          fetch('/api/cuisines.php')
-        ])
-
-        if (restaurantsRes.ok) {
-          const restaurantsData = await restaurantsRes.json()
-          setRestaurants(restaurantsData.restaurants || [])
-        }
-
-        if (cuisinesRes.ok) {
-          const cuisinesData = await cuisinesRes.json()
-          setCuisines(cuisinesData || [])
-        }
-      } catch (error) {
-        console.error('Error fetching data:', error)
-      } finally {
-        setLoading(false)
+      setRestaurants(restaurantsResponse.restaurants)
+      if (cuisinesLoading) {
+        setCuisines(cuisinesData)
+        setCuisinesLoading(false)
       }
+    } catch (error) {
+      console.error('Error fetching data:', error)
+      const errorType = error instanceof Error && error.name ? 
+        (error.name === 'NetworkError' ? 'network' : 
+         error.name === 'TimeoutError' ? 'timeout' : 'api') : 'generic'
+      setError(error as Error, errorType)
+    } finally {
+      setLoading(false)
     }
+  }
 
+  const handleRetry = async () => {
+    await retry(fetchData)
+  }
+
+  useEffect(() => {
     fetchData()
   }, [searchQuery, selectedCuisine, selectedArea])
 
@@ -132,111 +123,154 @@ export default function Restaurants() {
     return '$'.repeat(range) + '$'.repeat(Math.max(0, 4 - range))
   }
 
-  if (loading) {
+  // Show loading skeleton
+  if (loading && restaurants.length === 0) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mb-4"></div>
-          <p>Loading restaurants...</p>
-        </div>
-      </div>
+      <>
+        <NetworkStatus />
+        <PageLoadingSkeleton />
+      </>
     )
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-4xl font-display font-bold text-gray-900 mb-2">
-          Restaurants in Katy, Texas
-        </h1>
-        <p className="text-xl text-gray-600">
-          Discover {restaurants.length} amazing dining options in the Katy area
-        </p>
-      </div>
-
-      {/* Search and Filters */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
-        <form onSubmit={handleSearch} className="space-y-4">
-          {/* Search bar */}
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search restaurants, cuisines, or dishes..."
-              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
+    <>
+      <NetworkStatus />
+      <ErrorBoundary>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* Header */}
+          <div className="mb-8">
+            <h1 className="text-4xl font-display font-bold text-gray-900 mb-2">
+              Restaurants in Katy, Texas
+            </h1>
+            <p className="text-xl text-gray-600">
+              {loading ? (
+                'Loading amazing dining options...'
+              ) : (
+                `Discover ${restaurants.length} amazing dining options in the Katy area`
+              )}
+            </p>
           </div>
 
-          {/* Filters */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Cuisine filter */}
-            <select
-              value={selectedCuisine}
-              onChange={(e) => setSelectedCuisine(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="">All Cuisines</option>
-              {cuisines.map((cuisine) => (
-                <option key={cuisine.id} value={cuisine.name}>
-                  {cuisine.name} ({cuisine.restaurant_count})
-                </option>
-              ))}
-            </select>
+          {/* Search and Filters */}
+          {cuisinesLoading ? (
+            <SearchFiltersSkeleton />
+          ) : (
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
+              <form onSubmit={handleSearch} className="space-y-4">
+                {/* Search bar */}
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search restaurants, cuisines, or dishes..."
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    disabled={loading}
+                    aria-label="Search restaurants"
+                  />
+                </div>
 
-            {/* Area filter */}
-            <select
-              value={selectedArea}
-              onChange={(e) => setSelectedArea(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="">All Areas</option>
-              <option value="Katy">Katy</option>
-              <option value="Cinco Ranch">Cinco Ranch</option>
-              <option value="Mason Creek">Mason Creek</option>
-              <option value="Cross Creek Ranch">Cross Creek Ranch</option>
-              <option value="Old Katy">Old Katy</option>
-              <option value="West Katy">West Katy</option>
-            </select>
+                {/* Filters */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {/* Cuisine filter */}
+                  <select
+                    value={selectedCuisine}
+                    onChange={(e) => setSelectedCuisine(e.target.value)}
+                    className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={loading}
+                    aria-label="Filter by cuisine"
+                  >
+                    <option value="">All Cuisines</option>
+                    {cuisines.map((cuisine) => (
+                      <option key={cuisine.id} value={cuisine.name}>
+                        {cuisine.name} ({cuisine.restaurant_count})
+                      </option>
+                    ))}
+                  </select>
 
-            {/* Sort by */}
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="name">Sort by Name</option>
-              <option value="rating">Sort by Rating</option>
-              <option value="reviews">Sort by Reviews</option>
-            </select>
-          </div>
+                  {/* Area filter */}
+                  <select
+                    value={selectedArea}
+                    onChange={(e) => setSelectedArea(e.target.value)}
+                    className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={loading}
+                    aria-label="Filter by area"
+                  >
+                    <option value="">All Areas</option>
+                    <option value="Katy">Katy</option>
+                    <option value="Cinco Ranch">Cinco Ranch</option>
+                    <option value="Mason Creek">Mason Creek</option>
+                    <option value="Cross Creek Ranch">Cross Creek Ranch</option>
+                    <option value="Old Katy">Old Katy</option>
+                    <option value="West Katy">West Katy</option>
+                  </select>
 
-          <button
-            type="submit"
-            className="w-full md:w-auto bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium"
-          >
-            Search Restaurants
-          </button>
-        </form>
-      </div>
+                  {/* Sort by */}
+                  <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={loading}
+                    aria-label="Sort restaurants"
+                  >
+                    <option value="name">Sort by Name</option>
+                    <option value="rating">Sort by Rating</option>
+                    <option value="reviews">Sort by Reviews</option>
+                  </select>
+                </div>
 
-      {/* Results */}
-      {sortedRestaurants.length === 0 ? (
-        <div className="text-center py-12">
-          <ChefHat size={48} className="mx-auto text-gray-400 mb-4" />
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">No restaurants found</h3>
-          <p className="text-gray-600">Try adjusting your search criteria or filters.</p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {sortedRestaurants.map((restaurant) => (
+                <button
+                  type="submit"
+                  className="w-full md:w-auto bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
+                  disabled={loading}
+                >
+                  {loading ? 'Searching...' : 'Search Restaurants'}
+                </button>
+              </form>
+            </div>
+          )}
+
+          {/* Error state */}
+          {errorState.hasError && (
+            <div className="mb-8">
+              <ErrorHandler 
+                error={errorState.error}
+                errorType={errorState.errorType}
+                onRetry={handleRetry}
+                size="medium"
+              />
+            </div>
+          )}
+
+          {/* Results */}
+          {loading ? (
+            <SearchResultsSkeleton />
+          ) : sortedRestaurants.length === 0 && !errorState.hasError ? (
+            <div className="text-center py-12">
+              <ChefHat size={48} className="mx-auto text-gray-400 mb-4" />
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">No restaurants found</h3>
+              <p className="text-gray-600 mb-4">Try adjusting your search criteria or filters.</p>
+              <button
+                onClick={() => {
+                  setSearchQuery('')
+                  setSelectedCuisine('')
+                  setSelectedArea('')
+                }}
+                className="btn-secondary"
+              >
+                Clear Filters
+              </button>
+            </div>
+          ) : !errorState.hasError ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {sortedRestaurants.map((restaurant) => (
             <div key={restaurant.id} className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
               {/* Restaurant image */}
               <div className="relative h-48 bg-gray-200">
                 <img
-                  src={restaurant.cover_image_url}
+                  src={restaurant.image || 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&h=250&fit=crop&crop=center'}
                   alt={restaurant.name}
                   className="w-full h-full object-cover"
                   onError={(e) => {
@@ -255,40 +289,29 @@ export default function Restaurants() {
                   <h3 className="text-lg font-bold text-gray-900 line-clamp-1">
                     {restaurant.name}
                   </h3>
-                  {restaurant.logo_url && restaurant.logo_url !== restaurant.cover_image_url && (
-                    <img
-                      src={restaurant.logo_url}
-                      alt={`${restaurant.name} logo`}
-                      className="w-8 h-8 rounded-full object-cover"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.style.display = 'none';
-                      }}
-                    />
-                  )}
                 </div>
 
                 {/* Rating */}
                 <div className="flex items-center gap-2 mb-2">
                   <div className="flex items-center gap-1">
-                    {renderStars(restaurant.average_rating)}
+                    {renderStars(restaurant.average_rating || 0)}
                   </div>
                   <span className="text-sm font-medium text-gray-700">
-                    {restaurant.average_rating.toFixed(1)}
+                    {(restaurant.average_rating || 0).toFixed(1)}
                   </span>
                   <span className="text-sm text-gray-500">
-                    ({restaurant.total_reviews} reviews)
+                    ({restaurant.total_reviews || 0} reviews)
                   </span>
                 </div>
 
                 {/* Cuisine and area */}
                 <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
                   <span className="font-medium text-blue-600">
-                    {restaurant.primary_cuisine.name}
+                    {restaurant.primary_cuisine?.name || 'Restaurant'}
                   </span>
                   <div className="flex items-center gap-1">
                     <MapPin size={14} />
-                    <span>{restaurant.area.name}</span>
+                    <span>{restaurant.area?.name || 'Katy'}</span>
                   </div>
                 </div>
 
@@ -314,6 +337,11 @@ export default function Restaurants() {
                       Kid Friendly
                     </span>
                   )}
+                  {restaurant.wifi_available && (
+                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+                      WiFi
+                    </span>
+                  )}
                 </div>
 
                 {/* Contact info */}
@@ -334,16 +362,18 @@ export default function Restaurants() {
 
                 {/* Action button */}
                 <Link
-                  to={`/restaurant/${restaurant.slug}`}
+                  to={`/restaurant/${restaurant.slug || restaurant.id}`}
                   className="block w-full text-center bg-orange-500 text-white py-2 px-4 rounded-lg hover:bg-orange-600 transition-colors font-medium"
                 >
                   View Details
                 </Link>
               </div>
             </div>
-          ))}
+              ))}
+            </div>
+          ) : null}
         </div>
-      )}
-    </div>
+      </ErrorBoundary>
+    </>
   )
 }

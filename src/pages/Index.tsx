@@ -4,134 +4,77 @@ import FeaturedRestaurants from '@/components/home/FeaturedRestaurants'
 import SearchSection from '@/components/home/SearchSection'
 import StatsSection from '@/components/home/StatsSection'
 import NewsletterSignup from '@/components/home/NewsletterSignup'
-
-interface Restaurant {
-  id: number
-  name: string
-  description: string
-  address: string
-  phone: string
-  average_rating: number
-  total_reviews: number
-  price_range: number
-  logo_url: string
-  cover_image_url: string
-  slug: string
-  primary_cuisine: { name: string }
-  area: { name: string }
-  delivery_available: boolean
-  kid_friendly: boolean
-  wifi_available: boolean
-}
-
-interface ApiResponse {
-  restaurants: Restaurant[]
-  pagination: {
-    total: number
-  }
-}
+import ErrorBoundary from '@/components/common/ErrorBoundary'
+import { NetworkStatus, useErrorHandler } from '@/components/common/ErrorHandler'
+import EnhancedRestaurantService from '../../lib/enhanced-restaurant-service'
+import { type Restaurant } from '../../lib/restaurant-service'
 
 export default function Index() {
   const [restaurants, setRestaurants] = useState<Restaurant[]>([])
   const [totalRestaurants, setTotalRestaurants] = useState(0)
   const [totalReviews, setTotalReviews] = useState(0)
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const { errorState, setError, clearError, retry } = useErrorHandler(3)
+
+  const fetchData = async () => {
+    try {
+      clearError()
+      setLoading(true)
+
+      // Fetch both featured restaurants and stats in parallel for better performance
+      const [restaurantData, statsData] = await Promise.all([
+        EnhancedRestaurantService.getRestaurants({ limit: 6, offset: 0 }),
+        EnhancedRestaurantService.getStats()
+      ])
+      
+      if (restaurantData.restaurants) {
+        setRestaurants(restaurantData.restaurants)
+      }
+
+      // Use the accurate stats from the getStats method
+      setTotalRestaurants(statsData.restaurantCount)
+      setTotalReviews(statsData.totalReviews)
+
+    } catch (error) {
+      console.error('Error fetching data:', error)
+      const errorType = error instanceof Error && error.name ? 
+        (error.name === 'NetworkError' ? 'network' : 
+         error.name === 'TimeoutError' ? 'timeout' : 'api') : 'generic'
+      setError(error as Error, errorType)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleRetry = async () => {
+    await retry(fetchData)
+  }
 
   useEffect(() => {
-    const fetchRestaurants = async () => {
-      try {
-        setLoading(true)
-        setError(null)
-
-        // Fetch featured restaurants (limit to 6 for homepage)
-        const response = await fetch('/api/restaurants.php?limit=6')
-        
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`)
-        }
-        
-        const data: ApiResponse = await response.json()
-        
-        if (data.restaurants) {
-          setRestaurants(data.restaurants)
-          setTotalRestaurants(data.pagination?.total || 0)
-          
-          // Calculate total reviews from all restaurants
-          const reviewCount = data.restaurants.reduce((sum, restaurant) => sum + restaurant.total_reviews, 0)
-          setTotalReviews(reviewCount)
-        }
-      } catch (error) {
-        console.error('Error fetching restaurants:', error)
-        setError(error instanceof Error ? error.message : 'Failed to load restaurants')
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchRestaurants()
+    fetchData()
   }, [])
-
-  // Show loading state or error if needed
-  if (loading) {
-    return (
-      <>
-        <Hero />
-        <SearchSection />
-        <div className="py-16 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center">
-              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
-              <p className="mt-4 text-gray-600">Loading featured restaurants...</p>
-            </div>
-          </div>
-        </div>
-        <StatsSection 
-          restaurantCount={0}
-          reviewCount={0}
-        />
-        <NewsletterSignup />
-      </>
-    )
-  }
-
-  if (error) {
-    return (
-      <>
-        <Hero />
-        <SearchSection />
-        <div className="py-16 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center">
-              <p className="text-red-600">Error loading restaurants: {error}</p>
-              <button 
-                onClick={() => window.location.reload()} 
-                className="mt-4 btn-primary"
-              >
-                Retry
-              </button>
-            </div>
-          </div>
-        </div>
-        <StatsSection 
-          restaurantCount={0}
-          reviewCount={0}
-        />
-        <NewsletterSignup />
-      </>
-    )
-  }
 
   return (
     <>
-      <Hero />
-      <SearchSection />
-      <FeaturedRestaurants restaurants={restaurants} />
-      <StatsSection 
-        restaurantCount={totalRestaurants}
-        reviewCount={totalReviews}
-      />
-      <NewsletterSignup />
+      <NetworkStatus />
+      <ErrorBoundary>
+        <Hero />
+        <SearchSection />
+        <FeaturedRestaurants 
+          restaurants={restaurants}
+          loading={loading}
+          error={errorState.hasError ? errorState.error : null}
+          onRetry={handleRetry}
+        />
+        <StatsSection 
+          restaurantCount={totalRestaurants}
+          reviewCount={totalReviews}
+          loading={loading}
+          error={errorState.hasError ? errorState.error : null}
+          onRetry={handleRetry}
+        />
+        <NewsletterSignup />
+      </ErrorBoundary>
     </>
   )
 }

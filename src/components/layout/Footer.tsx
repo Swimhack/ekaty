@@ -36,19 +36,19 @@ export default function Footer() {
   }
 
   return (
-    <footer className="text-white" style={{ backgroundColor: '#1A2874' }}>
+    <footer className="text-white w-full overflow-hidden" style={{ backgroundColor: '#1A2874' }}>
       {/* Main footer content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-6 sm:gap-8 w-full">
           {/* Company info */}
-          <div className="lg:col-span-1">
+          <div className="sm:col-span-2 md:col-span-1 lg:col-span-1">
             <div className="mb-4">
               <img 
                 src="/images/logo_new.jpg" 
                 alt="eKaty.com"
-                className="h-16 w-auto mb-3"
+                className="h-12 sm:h-16 w-auto mb-3 max-w-full"
               />
-              <span className="font-display font-semibold text-xl text-white">
+              <span className="font-display font-semibold text-lg sm:text-xl text-white">
                 eKaty.com
               </span>
             </div>
@@ -78,8 +78,8 @@ export default function Footer() {
           </div>
 
           {/* Footer links */}
-          <div className="lg:col-span-4">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="sm:col-span-2 md:col-span-1 lg:col-span-4">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 w-full">
               <div>
                 <h3 className="font-semibold text-white mb-4">Discover</h3>
                 <ul className="space-y-2">
@@ -148,21 +148,21 @@ export default function Footer() {
         </div>
 
         {/* Newsletter signup */}
-        <div className="mt-12 pt-8 border-t border-gray-800">
-          <div className="max-w-md">
+        <div className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-gray-800 w-full">
+          <div className="max-w-full sm:max-w-md">
             <h3 className="font-semibold text-white mb-2">Stay Updated</h3>
             <p className="text-gray-400 text-sm mb-4">
               Get the latest restaurant news, reviews, and special offers delivered to your inbox.
             </p>
-            <form className="flex space-x-2">
+            <form className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="flex-1 px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-ekaty-500 focus:border-transparent"
+                className="flex-1 px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-ekaty-500 focus:border-transparent text-sm"
               />
               <button
                 type="submit"
-                className="px-6 py-2 bg-ekaty-500 hover:bg-ekaty-600 text-white font-medium rounded-lg transition-colors"
+                className="px-4 sm:px-6 py-2 bg-ekaty-500 hover:bg-ekaty-600 text-white font-medium rounded-lg transition-colors text-sm whitespace-nowrap"
               >
                 Subscribe
               </button>
@@ -172,20 +172,22 @@ export default function Footer() {
       </div>
 
       {/* Bottom bar */}
-      <div className="border-t border-gray-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+      <div className="border-t border-gray-800 w-full">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+          <div className="flex flex-col sm:flex-row justify-between items-center space-y-3 sm:space-y-0 text-center sm:text-left">
             {/* Copyright */}
-            <div className="text-gray-400 text-sm">
-              © {currentYear} eKaty.com. All rights reserved. Built by{' '}
-              <a 
-                href="https://stricklandtechnology.com" 
-                className="text-ekaty-500 hover:text-ekaty-400 transition-colors"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Strickland Technology
-              </a>
+            <div className="text-gray-400 text-sm max-w-full">
+              <span className="block sm:inline">© {currentYear} eKaty.com. All rights reserved.</span>{' '}
+              <span className="block sm:inline">Built by{' '}
+                <a 
+                  href="https://stricklandtechnology.com" 
+                  className="text-ekaty-500 hover:text-ekaty-400 transition-colors"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Strickland Technology
+                </a>
+              </span>
             </div>
 
             {/* Social links */}
