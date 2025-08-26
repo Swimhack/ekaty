@@ -47,6 +47,9 @@ export class RestaurantService {
       offset = 0
     } = filters
 
+    // Debug logging
+    console.log('🔍 Restaurant Service Filters:', { search, cuisine, area, limit, offset })
+
     try {
       // Build the query
       let query = supabase
@@ -58,9 +61,38 @@ export class RestaurantService {
         query = query.or(`name.ilike.%${search}%,description.ilike.%${search}%,cuisine.cs.{${search}}`)
       }
 
-      // Apply cuisine filter
+      // Apply cuisine filter with flexible matching
       if (cuisine) {
-        query = query.contains('cuisine', [cuisine])
+        // Create variations of the cuisine name to handle different formats in database
+        const cuisineVariations = [
+          cuisine, // exact match
+          cuisine.toLowerCase(), 
+          cuisine.toUpperCase(),
+          cuisine.charAt(0).toUpperCase() + cuisine.slice(1).toLowerCase(), // Title case
+        ]
+        
+        // Handle common mappings
+        const cuisineMap: { [key: string]: string[] } = {
+          'BBQ': ['BBQ', 'Barbecue', 'Bar-B-Que', 'Barbeque'],
+          'Asian': ['Asian', 'Chinese', 'Japanese', 'Thai', 'Korean', 'Vietnamese'],
+          'Steakhouse': ['Steakhouse', 'Steak House', 'Steak'],
+          'Breakfast': ['Breakfast', 'Brunch', 'American (Traditional)'],
+          'Mexican': ['Mexican', 'Tex-Mex', 'Latin American'],
+          'Italian': ['Italian', 'Pizza', 'Mediterranean']
+        }
+        
+        // Add mapped variations if available
+        if (cuisineMap[cuisine]) {
+          cuisineVariations.push(...cuisineMap[cuisine])
+        }
+        
+        // Remove duplicates
+        const uniqueVariations = [...new Set(cuisineVariations)]
+        
+        console.log(`🔍 Searching for cuisine variations:`, uniqueVariations)
+        
+        // Use overlaps with all variations
+        query = query.overlaps('cuisine', uniqueVariations)
       }
 
       // Apply area filter

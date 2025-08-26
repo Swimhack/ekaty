@@ -28,11 +28,34 @@ export default function Restaurants() {
   const [selectedArea, setSelectedArea] = useState(searchParams.get('area') || '')
   const [sortBy, setSortBy] = useState('name')
 
+  // Update state when URL parameters change
+  useEffect(() => {
+    const newSearchQuery = searchParams.get('q') || ''
+    const newCuisine = searchParams.get('cuisine') || ''
+    const newArea = searchParams.get('area') || ''
+    
+    console.log('🔍 URL params changed:', { 
+      q: newSearchQuery, 
+      cuisine: newCuisine, 
+      area: newArea 
+    })
+    
+    setSearchQuery(newSearchQuery)
+    setSelectedCuisine(newCuisine)
+    setSelectedArea(newArea)
+  }, [searchParams])
+
   // Fetch restaurants and cuisines
   const fetchData = async () => {
     try {
       clearError()
       setLoading(true)
+      
+      console.log('🔍 Restaurants page filters:', {
+        searchQuery: searchQuery || undefined,
+        selectedCuisine: selectedCuisine || undefined,
+        selectedArea: selectedArea || undefined
+      })
       
       // Fetch restaurants and cuisines in parallel
       const [restaurantsResponse, cuisinesData] = await Promise.all([
@@ -45,6 +68,9 @@ export default function Restaurants() {
         }),
         cuisinesLoading ? EnhancedRestaurantService.getCuisines() : Promise.resolve(cuisines)
       ])
+
+      console.log('🔍 Restaurant response:', restaurantsResponse)
+      console.log('🔍 Available cuisines:', cuisinesData)
 
       setRestaurants(restaurantsResponse.restaurants)
       if (cuisinesLoading) {
@@ -160,15 +186,37 @@ export default function Restaurants() {
           {/* Header */}
           <div className="mb-8">
             <h1 className="text-4xl font-display font-bold text-gray-900 mb-2">
-              Restaurants in Katy, Texas
+              {selectedCuisine ? `${selectedCuisine} Restaurants in Katy` : 'Restaurants in Katy, Texas'}
             </h1>
             <p className="text-xl text-gray-600">
               {loading ? (
                 'Loading amazing dining options...'
+              ) : selectedCuisine ? (
+                `Found ${restaurants.length} ${selectedCuisine.toLowerCase()} restaurants in the Katy area`
               ) : (
                 `Discover ${restaurants.length} amazing dining options in the Katy area`
               )}
             </p>
+            {selectedCuisine && (
+              <div className="mt-4">
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-orange-100 text-orange-800">
+                  <span className="mr-2">🍽️</span>
+                  Filtering by: {selectedCuisine}
+                  <button
+                    onClick={() => {
+                      setSelectedCuisine('')
+                      const params = new URLSearchParams(searchParams)
+                      params.delete('cuisine')
+                      setSearchParams(params)
+                    }}
+                    className="ml-2 text-orange-600 hover:text-orange-800"
+                    title="Clear filter"
+                  >
+                    ×
+                  </button>
+                </span>
+              </div>
+            )}
           </div>
 
           {/* Search and Filters */}
