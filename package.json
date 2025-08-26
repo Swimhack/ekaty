@@ -10,7 +10,9 @@
     "preview": "vite preview",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "type-check": "tsc --noEmit",
-    "api-server": "node server/mock-api.js"
+    "api-server": "node server/mock-api.js",
+    "test-sync": "node server/test-sync.js",
+    "sync-restaurants": "node server/sync-restaurants.js"
   },
   "dependencies": {
     "@googlemaps/places": "^2.1.0",
@@ -21,6 +23,7 @@
     "autoprefixer": "^10.4.16",
     "cors": "^2.8.5",
     "date-fns": "^2.30.0",
+    "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "lovable-tagger": "^1.1.8",
     "lucide-react": "^0.294.0",
