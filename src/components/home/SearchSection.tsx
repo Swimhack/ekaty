@@ -78,7 +78,7 @@ const SearchSection = memo(function SearchSection() {
                 cuisines.map((cuisine) => (
                   <Link
                     key={cuisine.id}
-                    to={`/restaurants?cuisine=${cuisine.name.toLowerCase()}`}
+                    to={`/restaurants?cuisine=${encodeURIComponent(cuisine.name)}`}
                     className="group p-4 border border-gray-200 rounded-lg hover:border-ekaty-200 hover:bg-ekaty-50 transition-all duration-200"
                   >
                     <div className="flex items-center justify-between">

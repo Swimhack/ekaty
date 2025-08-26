@@ -149,20 +149,19 @@ export default function Hero() {
 
           {/* Popular Search Tags */}
           <div className="text-center px-4">
-            <div className="text-white/80 font-medium text-sm mb-3 drop-shadow">Popular searches:</div>
+            <div className="text-white/80 font-medium text-sm mb-3 drop-shadow">Popular cuisines:</div>
             <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
-              {['Pizza', 'Mexican', 'BBQ', 'Sushi', 'Steakhouse'].map((tag) => (
+              {['Italian', 'Mexican', 'BBQ', 'Asian', 'Steakhouse', 'Breakfast'].map((cuisine) => (
                 <button
-                  key={tag}
+                  key={cuisine}
                   onClick={() => {
-                    setSearchQuery(tag.toLowerCase())
                     const params = new URLSearchParams()
-                    params.set('q', tag.toLowerCase())
+                    params.set('cuisine', cuisine)
                     navigate(`/restaurants?${params.toString()}`)
                   }}
                   className="bg-white/20 hover:bg-white/30 text-white font-medium px-2.5 sm:px-3 py-1 rounded-full border border-white/30 hover:border-white/50 transition-all duration-200 backdrop-blur-sm text-xs sm:text-sm"
                 >
-                  {tag}
+                  {cuisine}
                 </button>
               ))}
             </div>
