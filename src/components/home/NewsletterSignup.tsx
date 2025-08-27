@@ -40,9 +40,8 @@ export default function NewsletterSignup() {
     setStatus('loading')
 
     try {
-      // Use the mock API server URL (adjust port based on environment)
-      const API_BASE_URL = import.meta.env.DEV ? 'http://localhost:8082' : ''
-      const response = await fetch(`${API_BASE_URL}/api/newsletter/subscribe`, {
+      // Use Supabase or production API endpoint
+      const response = await fetch('/api/newsletter/subscribe', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
