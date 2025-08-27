@@ -1,2 +1,0 @@
-import{j as t}from"./index-VgQ7sLoW.js";function e(){return t.jsx("div",{className:"max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12",children:t.jsxs("div",{className:"text-center",children:[t.jsx("h1",{className:"text-4xl font-display font-bold text-gray-900 mb-4",children:"Contact Us"}),t.jsx("p",{className:"text-xl text-gray-600 max-w-3xl mx-auto",children:"Get in touch with the eKaty.com team for questions, suggestions, or support."})]})})}export{e as default};
-//# sourceMappingURL=Contact-4JwZzE-S.js.map

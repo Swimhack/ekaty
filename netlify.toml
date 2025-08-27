@@ -4,6 +4,8 @@
 
 [build.environment]
   NODE_VERSION = "18"
+  # Enable faster builds with caching
+  NPM_FLAGS = "--prefer-offline --no-audit"
 
 # SPA redirect - this is critical for React Router to work
 [[redirects]]
