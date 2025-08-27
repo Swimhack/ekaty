@@ -286,3 +286,4 @@ For issues and questions:
 ## License
 
 This community chat module is part of the eKaty application and follows the same licensing terms.
+

@@ -238,3 +238,4 @@ export const communityChatService = new CommunityChatService()
 
 // Export the class for testing or custom instances
 export { CommunityChatService }
+

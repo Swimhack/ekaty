@@ -389,3 +389,4 @@ async function updateUserHeartbeat(supabase: any, req: Request) {
     headers: { ...corsHeaders, 'Content-Type': 'application/json' }
   })
 }
+

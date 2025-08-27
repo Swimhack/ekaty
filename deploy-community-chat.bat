@@ -117,3 +117,4 @@ echo %INFO% 2. Test the chat functionality in your application
 echo %INFO% 3. Configure any additional settings in Supabase dashboard
 echo.
 pause
+

@@ -160,3 +160,4 @@ INSERT INTO community_messages (id, user_id, username, message, timestamp, likes
   ('00000000-0000-0000-0000-000000000003', '00000000-0000-0000-0000-000000000003', 'James R.', 'Anyone know if Local Foods is still doing their happy hour specials? Planning to meet friends there later!', NOW() - INTERVAL '30 minutes', 3, NULL, FALSE, FALSE),
   ('00000000-0000-0000-0000-000000000004', '00000000-0000-0000-0000-000000000004', 'Emma L.', 'The farmers market this weekend was incredible! Picked up some fresh ingredients and tried the new food truck. Katy''s food scene just keeps getting better! 🌟', NOW() - INTERVAL '45 minutes', 15, NULL, FALSE, FALSE)
 ON CONFLICT (id) DO NOTHING;
+
