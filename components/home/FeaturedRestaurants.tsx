@@ -98,6 +98,13 @@ export default function FeaturedRestaurants({ restaurants }: FeaturedRestaurants
                     src={restaurant.cover_image_url}
                     alt={restaurant.name}
                     className="w-full h-full object-cover"
+                    loading="lazy"
+                    decoding="async"
+                    onError={(e) => {
+                      const target = e.currentTarget as HTMLImageElement
+                      target.onerror = null
+                      target.src = '/images/restaurant-placeholder.jpg'
+                    }}
                   />
                 ) : (
                   <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">

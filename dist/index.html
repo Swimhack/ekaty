@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>eKaty.com - Katy Restaurant Directory</title>
+    <meta name="description" content="Discover the best restaurants in Katy, Texas. Read reviews, find local favorites, and explore the dining scene in Katy." />
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="/images/logo.gif" as="image" />
+    <link rel="dns-prefetch" href="//images.unsplash.com" />
+    <link rel="preconnect" href="//images.unsplash.com" crossorigin />
+    
+    <!-- Optimize font loading -->
+    <style>
+      /* Inline critical CSS for fast loading */
+      body { 
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+        margin: 0;
+        background-color: #ffffff;
+      }
+      #root {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+      /* Loading spinner styles */
+      .loading-spinner {
+        display: inline-block;
+        width: 32px;
+        height: 32px;
+        border: 3px solid rgba(0,0,0,0.1);
+        border-top: 3px solid #1A2874;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    </style>
+    <script type="module" crossorigin src="/assets/index-VFvYmn6b.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-Bs-JCr5I.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>

@@ -17,6 +17,7 @@ const Areas = lazy(() => import('./pages/Areas'))
 const Reviews = lazy(() => import('./pages/Reviews'))
 const Community = lazy(() => import('./pages/Community'))
 const RestaurantDetail = lazy(() => import('./pages/RestaurantDetail'))
+const RestaurantDashboard = lazy(() => import('./pages/RestaurantDashboard'))
 
 // Loading component
 const LoadingSpinner = () => (
@@ -43,6 +44,7 @@ function App() {
               <Route path="/reviews" element={<Reviews />} />
               <Route path="/community" element={<Community />} />
               <Route path="/restaurant/:slug" element={<RestaurantDetail />} />
+              <Route path="/restaurant-dashboard" element={<RestaurantDashboard />} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
               {/* Catch-all route for 404 errors */}

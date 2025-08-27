@@ -1,0 +1,2 @@
+import{j as t}from"./index-VFvYmn6b.js";function a(){return t.jsx("div",{className:"max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12",children:t.jsxs("div",{className:"text-center",children:[t.jsx("h1",{className:"text-4xl font-display font-bold text-gray-900 mb-4",children:"Grub Roulette"}),t.jsx("p",{className:"text-xl text-gray-600 max-w-3xl mx-auto",children:"Can't decide where to eat? Let our Grub Roulette pick a random restaurant for you!"})]})})}export{a as default};
+//# sourceMappingURL=GrubRoulette-C6ukj-R8.js.map

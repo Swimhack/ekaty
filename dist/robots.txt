@@ -1,0 +1,20 @@
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://ekaty.com/sitemap.xml
+
+# Disallow admin areas
+Disallow: /admin/
+Disallow: /api/
+Disallow: /_next/
+Disallow: /netlify/
+
+# Allow important pages
+Allow: /
+Allow: /search
+Allow: /restaurants
+Allow: /categories
+
+# Crawl delay
+Crawl-delay: 1
