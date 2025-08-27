@@ -65,11 +65,9 @@ export default function Community() {
   ]
 
   useEffect(() => {
-    // Simulate connecting to discussion service
-    const connectTimer = setTimeout(() => {
-      setIsConnected(true)
-      setMessages(mockMessages)
-    }, 1000)
+    // Initialize with mock messages immediately (no artificial delay)
+    setIsConnected(true)
+    setMessages(mockMessages)
 
     // Simulate active user count updates
     const userTimer = setInterval(() => {
@@ -77,7 +75,6 @@ export default function Community() {
     }, 10000)
 
     return () => {
-      clearTimeout(connectTimer)
       clearInterval(userTimer)
     }
   }, [])

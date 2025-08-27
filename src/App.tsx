@@ -45,6 +45,8 @@ function App() {
               <Route path="/restaurant/:slug" element={<RestaurantDetail />} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
+              {/* Catch-all route for 404 errors */}
+              <Route path="*" element={<div className="min-h-screen flex items-center justify-center"><div className="text-center"><h1 className="text-2xl font-bold text-gray-900 mb-2">Page Not Found</h1><p className="text-gray-600">The page you're looking for doesn't exist.</p><a href="/" className="mt-4 inline-block bg-orange-500 text-white px-6 py-2 rounded-lg hover:bg-orange-600 transition-colors">Go Home</a></div></div>} />
             </Routes>
           </Suspense>
         </main>
