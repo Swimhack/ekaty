@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { ArrowLeft, Star, MapPin, Phone, Globe, Clock, Heart, Share2, Camera, Calendar, Users } from 'lucide-react'
+import EnhancedRestaurantService from '../../lib/enhanced-restaurant-service'
+import { useErrorHandler } from '@/components/common/ErrorHandler'
+import ErrorHandler from '@/components/common/ErrorHandler'
 
 interface Restaurant {
   id: number
@@ -34,62 +37,75 @@ export default function RestaurantDetail() {
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null)
   const [reviews, setReviews] = useState<Review[]>([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const { errorState, setError, clearError } = useErrorHandler(3)
   const [activeTab, setActiveTab] = useState<'overview' | 'reviews' | 'photos'>('overview')
 
-  useEffect(() => {
-    const fetchRestaurant = async () => {
-      if (!slug) return
+  const fetchRestaurant = async () => {
+    if (!slug) return
 
-      try {
-        setLoading(true)
-        const response = await fetch(`/api/restaurants.php?slug=${encodeURIComponent(slug)}`)
-        
-        if (!response.ok) {
-          throw new Error(`Restaurant not found (${response.status})`)
-        }
-
-        const data = await response.json()
-        
-        if (data.error) {
-          throw new Error(data.error)
-        }
-
-        if (data.restaurants && data.restaurants.length > 0) {
-          const restaurantData = data.restaurants.find((r: Restaurant) => r.slug === slug)
-          if (restaurantData) {
-            setRestaurant(restaurantData)
-            // Mock reviews for now - can be replaced with actual API call
-            setReviews([
-              {
-                id: 1,
-                user_name: 'Sarah M.',
-                rating: 5,
-                comment: 'Amazing food and excellent service! The atmosphere was perfect for a date night.',
-                date: '2024-01-15'
-              },
-              {
-                id: 2,
-                user_name: 'Mike K.',
-                rating: 4,
-                comment: 'Great food, friendly staff. Will definitely come back!',
-                date: '2024-01-10'
-              }
-            ])
-          } else {
-            throw new Error('Restaurant not found')
+    try {
+      clearError()
+      setLoading(true)
+      
+      const restaurantData = await EnhancedRestaurantService.getRestaurantById(slug)
+      
+      if (restaurantData) {
+        setRestaurant(restaurantData)
+        // Mock reviews for now - can be replaced with actual API call
+        setReviews([
+          {
+            id: 1,
+            user_name: 'Sarah M.',
+            rating: 5,
+            comment: 'Amazing food and excellent service! The atmosphere was perfect for a date night.',
+            date: '2024-01-15'
+          },
+          {
+            id: 2,
+            user_name: 'Mike K.',
+            rating: 4,
+            comment: 'Great food, friendly staff. Will definitely come back!',
+            date: '2024-01-10'
           }
-        } else {
-          throw new Error('Restaurant not found')
-        }
-      } catch (err) {
-        console.error('Error fetching restaurant:', err)
-        setError(err instanceof Error ? err.message : 'Failed to load restaurant')
-      } finally {
-        setLoading(false)
+        ])
+      } else {
+        throw new Error('Restaurant not found')
       }
+    } catch (err) {
+      console.error('Error fetching restaurant:', err)
+      const errorMessage = err instanceof Error ? err.message.toLowerCase() : ''
+      
+      // Classify error type with Cloudflare detection
+      let errorType: 'network' | 'api' | 'timeout' | 'cloudflare' | 'generic' = 'generic'
+      
+      if (err instanceof Error && err.name) {
+        switch (err.name) {
+          case 'NetworkError':
+            errorType = 'network'
+            break
+          case 'TimeoutError':
+            errorType = errorMessage.includes('cloudflare') || 
+                       errorMessage.includes('cf-ray') ||
+                       errorMessage.includes('connection timed out') ? 'cloudflare' : 'timeout'
+            break
+          default:
+            errorType = 'api'
+        }
+      } else if (errorMessage.includes('cloudflare') || errorMessage.includes('timeout')) {
+        errorType = 'cloudflare'
+      }
+      
+      setError(err as Error, errorType)
+    } finally {
+      setLoading(false)
     }
+  }
 
+  const handleRetry = async () => {
+    await fetchRestaurant()
+  }
+
+  useEffect(() => {
     fetchRestaurant()
   }, [slug])
 
@@ -121,15 +137,26 @@ export default function RestaurantDetail() {
     )
   }
 
-  if (error || !restaurant) {
+  if (errorState.hasError || (!restaurant && !loading)) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Restaurant Not Found</h1>
-          <p className="text-gray-600 mb-6">{error || 'The restaurant you\'re looking for could not be found.'}</p>
+          {errorState.hasError ? (
+            <ErrorHandler 
+              error={errorState.error}
+              errorType={errorState.errorType}
+              onRetry={handleRetry}
+              size="large"
+            />
+          ) : (
+            <>
+              <h1 className="text-2xl font-bold text-gray-900 mb-4">Restaurant Not Found</h1>
+              <p className="text-gray-600 mb-6">The restaurant you're looking for could not be found.</p>
+            </>
+          )}
           <Link
             to="/restaurants"
-            className="inline-flex items-center space-x-2 bg-orange-500 text-white px-6 py-3 rounded-lg hover:bg-orange-600 transition-colors"
+            className="inline-flex items-center space-x-2 bg-orange-500 text-white px-6 py-3 rounded-lg hover:bg-orange-600 transition-colors mt-4"
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Back to Restaurants</span>

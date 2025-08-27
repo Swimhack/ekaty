@@ -1,2 +1,0 @@
-import{j as t}from"./index-VFvYmn6b.js";function a(){return t.jsx("div",{className:"max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12",children:t.jsxs("div",{className:"text-center",children:[t.jsx("h1",{className:"text-4xl font-display font-bold text-gray-900 mb-4",children:"Reviews"}),t.jsx("p",{className:"text-xl text-gray-600 max-w-3xl mx-auto",children:"Read authentic reviews from the Katy community about local restaurants."})]})})}export{a as default};
-//# sourceMappingURL=Reviews-zo6yNoa5.js.map

@@ -1,0 +1,2 @@
+import{j as a}from"./index-VgQ7sLoW.js";function e(){return a.jsx("div",{className:"max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12",children:a.jsxs("div",{className:"text-center",children:[a.jsx("h1",{className:"text-4xl font-display font-bold text-gray-900 mb-4",children:"Areas"}),a.jsx("p",{className:"text-xl text-gray-600 max-w-3xl mx-auto",children:"Find restaurants by neighborhood and area within Katy."})]})})}export{e as default};
+//# sourceMappingURL=Areas-BBabf4r6.js.map

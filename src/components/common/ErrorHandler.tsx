@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { AlertCircle, RefreshCw, Wifi, WifiOff, AlertTriangle } from 'lucide-react'
 
 export interface ErrorState {
@@ -268,7 +268,7 @@ export function ErrorHandler({
 export function NetworkStatus() {
   const [isOnline, setIsOnline] = useState(navigator.onLine)
 
-  useState(() => {
+  useEffect(() => {
     const handleOnline = () => setIsOnline(true)
     const handleOffline = () => setIsOnline(false)
 
@@ -279,7 +279,7 @@ export function NetworkStatus() {
       window.removeEventListener('online', handleOnline)
       window.removeEventListener('offline', handleOffline)
     }
-  })
+  }, [])
 
   if (isOnline) return null
 

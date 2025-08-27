@@ -1,2 +1,0 @@
-import{j as t}from"./index-VFvYmn6b.js";function e(){return t.jsx("div",{className:"max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12",children:t.jsxs("div",{className:"text-center",children:[t.jsx("h1",{className:"text-4xl font-display font-bold text-gray-900 mb-4",children:"Restaurant Map"}),t.jsx("p",{className:"text-xl text-gray-600 max-w-3xl mx-auto",children:"Explore Katy's restaurants on an interactive map to find dining options near you."})]})})}export{e as default};
-//# sourceMappingURL=Map-Cq9C-ueb.js.map

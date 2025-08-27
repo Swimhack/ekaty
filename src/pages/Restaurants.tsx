@@ -108,7 +108,13 @@ export default function Restaurants() {
   }
 
   const handleRetry = async () => {
-    await retry(fetchData)
+    try {
+      clearError()
+      await fetchData()
+    } catch (error) {
+      console.error('Retry failed:', error)
+      // Error will be set by fetchData function
+    }
   }
 
   useEffect(() => {
@@ -432,7 +438,7 @@ export default function Restaurants() {
                   to={`/restaurant/${restaurant.slug || restaurant.id}`}
                   className="block w-full text-center bg-orange-500 text-white py-2 px-4 rounded-lg hover:bg-orange-600 transition-colors font-medium"
                 >
-                  View Details
+                  View Full Profile
                 </Link>
               </div>
             </div>
