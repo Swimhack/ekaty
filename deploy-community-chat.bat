@@ -118,3 +118,4 @@ echo %INFO% 3. Configure any additional settings in Supabase dashboard
 echo.
 pause
 
+

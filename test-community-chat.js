@@ -5,7 +5,7 @@
  * This script tests the basic functionality of the community chat system
  */
 
-const { createClient } = require('@supabase/supabase-js')
+import { createClient } from '@supabase/supabase-js'
 
 // Configuration
 const SUPABASE_URL = process.env.VITE_SUPABASE_URL || 'https://sixzqokachwkcvsqpxoq.supabase.co'
@@ -196,4 +196,5 @@ if (require.main === module) {
 }
 
 module.exports = { runAllTests, testResults }
+
 

@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git clone:*)",
+      "WebFetch(domain:github.com)",
+      "Bash(mkdir:*)",
+      "Bash(chmod:*)",
+      "Bash(npm install:*)",
+      "Bash(cp:*)",
+      "Bash(npm run build:*)",
+      "Bash(rm:*)",
+      "Bash(find:*)",
+      "Bash(true)",
+      "Bash(ls:*)",
+      "Bash(npm run dev:*)",
+      "Bash(timeout 10s npm run dev)",
+      "Bash(curl:*)",
+      "Bash(nslookup:*)",
+      "Bash(ping:*)",
+      "Bash(cd:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "WebSearch"
+    ],
+    "deny": []
+  }
+}

@@ -390,3 +390,4 @@ async function updateUserHeartbeat(supabase: any, req: Request) {
   })
 }
 
+
