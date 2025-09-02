@@ -2,6 +2,7 @@
 import { Link } from 'react-router-dom'
 import { ChefHat, MapPin } from 'lucide-react'
 import { CUISINE_CATEGORIES } from '@/data/cuisines'
+import PageTemplate from '@/components/layout/PageTemplate'
 
 const cuisineColors = [
   { color: 'bg-red-50 border-red-200 hover:bg-red-100', textColor: 'text-red-700' },
@@ -18,15 +19,10 @@ const cuisineColors = [
 
 export default function Cuisines() {
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="text-center mb-12">
-        <h1 className="text-4xl font-display font-bold text-gray-900 mb-4">
-          Explore Cuisines in Katy
-        </h1>
-        <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-          Discover restaurants by cuisine type and find your new favorite flavors in Katy, Texas.
-        </p>
-      </div>
+    <PageTemplate
+      title="Explore Cuisines in Katy"
+      subtitle="Discover restaurants by cuisine type and find your new favorite flavors in Katy, Texas."
+    >
 
       {/* Featured Cuisines Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
@@ -86,6 +82,6 @@ export default function Cuisines() {
           </Link>
         </div>
       </div>
-    </div>
+    </PageTemplate>
   )
 }

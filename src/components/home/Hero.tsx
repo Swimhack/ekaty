@@ -1,12 +1,22 @@
 
-import { useState } from 'react'
-import { Search, MapPin } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { Search, MapPin, AlertCircle } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 export default function Hero() {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedArea, setSelectedArea] = useState('')
+  const [imageLoaded, setImageLoaded] = useState(false)
+  const [imageError, setImageError] = useState(false)
   const navigate = useNavigate()
+
+  // Preload hero image for better performance
+  useEffect(() => {
+    const img = new Image()
+    img.src = '/images/katywelcome.jpg'
+    img.onload = () => setImageLoaded(true)
+    img.onerror = () => setImageError(true)
+  }, [])
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -31,51 +41,72 @@ export default function Hero() {
   ]
 
   return (
-    <div className="relative bg-gradient-to-br from-orange-50 to-amber-50 py-12 sm:py-16 md:py-20 lg:py-32 overflow-hidden">
-      {/* Full-width Hero Background Image extending to edges */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage: 'url("/images/katywelcome.jpg")',
-          opacity: 0.3
-        }}
-      />
+    <div className="relative w-screen min-h-[50vh] md:min-h-[60vh] lg:min-h-[75vh] overflow-hidden">
+      {/* Full-width Hero Background Image - Edge to Edge */}
+      {!imageError ? (
+        <>
+          <img
+            src="/images/katywelcome.jpg"
+            alt="Welcome to Katy, Texas - Local restaurants and dining"
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${
+              imageLoaded ? 'opacity-100' : 'opacity-0'
+            }`}
+            loading="eager"
+            onError={() => setImageError(true)}
+          />
+          {/* Gradient overlay for better text contrast */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/60" />
+        </>
+      ) : (
+        /* Fallback gradient if image fails to load */
+        <div className="absolute inset-0 bg-gradient-to-br from-orange-600 via-orange-500 to-amber-500">
+          <div className="absolute inset-0 bg-gradient-to-b from-black/30 to-black/50" />
+        </div>
+      )}
       
-      {/* Gradient overlay for better text contrast */}
-      <div className="absolute inset-0 bg-gradient-to-b from-orange-900/30 via-orange-800/20 to-orange-900/40" />
-      
-      {/* Subtle pattern overlay */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNlYjc0MjUiIGZpbGwtb3BhY2l0eT0iMC4xIj48Y2lyY2xlIGN4PSIzMCIgY3k9IjMwIiByPSI0Ii8+PC9nPjwvZz48L3N2Zz4=')] repeat"></div>
+      {/* Subtle pattern overlay - optional decorative element */}
+      <div className="absolute inset-0 opacity-10 pointer-events-none">
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4xIj48Y2lyY2xlIGN4PSIzMCIgY3k9IjMwIiByPSI0Ii8+PC9nPjwvZz48L3N2Zz4=')] repeat"></div>
       </div>
 
-      <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center w-full">
-          {/* Classic eKaty Logo */}
-          <div className="mb-6 sm:mb-8 flex justify-center">
+      {/* Image loading state indicator */}
+      {!imageLoaded && !imageError && (
+        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-orange-600 via-orange-500 to-amber-500">
+          <div className="animate-pulse text-white">
+            <div className="w-16 h-16 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>
+          </div>
+        </div>
+      )}
+
+      {/* Content Container - Centered with proper padding */}
+      <div className="relative z-10 flex items-center justify-center min-h-[50vh] md:min-h-[60vh] lg:min-h-[75vh] px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        <div className="text-center w-full max-w-7xl mx-auto">
+          {/* Classic eKaty Logo with enhanced visibility */}
+          <div className="mb-6 sm:mb-8 flex justify-center animate-fadeIn">
             <img 
               src="/images/logo_new.jpg" 
               alt="eKaty.com - Everything Katy Community Driven"
-              className="h-20 sm:h-24 md:h-28 lg:h-32 w-auto drop-shadow-lg max-w-full"
+              className="h-20 sm:h-24 md:h-28 lg:h-32 w-auto drop-shadow-2xl max-w-full rounded-lg"
+              loading="eager"
             />
           </div>
           
-          {/* Welcome Message with enhanced contrast */}
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display font-bold text-white mb-3 sm:mb-4 drop-shadow-lg px-4">
+          {/* Welcome Message with maximum contrast and readability */}
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white mb-4 sm:mb-6 drop-shadow-2xl px-4 animate-fadeInUp">
             Welcome to eKaty.com
           </h1>
           
-          <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-orange-100 mb-2 drop-shadow-md px-4">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-white/95 mb-3 drop-shadow-xl px-4 animate-fadeInUp animation-delay-100">
             Everything Katy - Community Driven
           </h2>
           
-          <p className="text-base sm:text-lg text-white/90 mb-6 sm:mb-8 max-w-2xl mx-auto drop-shadow-md px-4">
+          <p className="text-lg sm:text-xl text-white/90 mb-8 sm:mb-10 max-w-3xl mx-auto drop-shadow-lg px-4 animate-fadeInUp animation-delay-200">
             Your comprehensive guide to restaurants, dining, and community in Katy, Texas
           </p>
 
-          {/* Search Section */}
-          <form onSubmit={handleSearch} className="w-full max-w-4xl mx-auto mb-8 sm:mb-12 px-4">
-            <div className="bg-white/95 backdrop-blur-sm rounded-xl shadow-2xl p-4 sm:p-6 border border-white/20 w-full">
+          {/* Search Section with enhanced visibility */}
+          <form onSubmit={handleSearch} className="w-full max-w-4xl mx-auto mb-8 sm:mb-10 px-4 animate-fadeInUp animation-delay-300">
+            <div className="bg-white/98 backdrop-blur-md rounded-xl shadow-2xl p-4 sm:p-6 border border-white/30 w-full">
               <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-800 mb-3 sm:mb-4 text-center">Find Restaurants in Katy</h3>
               
               <div className="flex flex-col sm:flex-col lg:flex-row gap-3 sm:gap-4 w-full">
@@ -119,8 +150,8 @@ export default function Hero() {
             </div>
           </form>
 
-          {/* Quick Navigation Links */}
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 w-full max-w-4xl mx-auto mb-6 sm:mb-8 px-4">
+          {/* Quick Navigation Links with staggered animation */}
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 w-full max-w-4xl mx-auto mb-6 sm:mb-8 px-4 animate-fadeInUp animation-delay-400">
             <button
               onClick={() => navigate('/restaurants')}
               className="bg-white/95 backdrop-blur-sm hover:bg-white text-gray-800 hover:text-orange-600 font-medium py-2.5 sm:py-3 px-3 sm:px-4 rounded-lg border border-white/30 hover:border-orange-300 transition-all duration-200 shadow-lg hover:shadow-xl text-sm sm:text-base"
@@ -147,9 +178,9 @@ export default function Hero() {
             </button>
           </div>
 
-          {/* Popular Search Tags */}
-          <div className="text-center px-4">
-            <div className="text-white/80 font-medium text-sm mb-3 drop-shadow">Popular cuisines:</div>
+          {/* Popular Search Tags with enhanced visibility */}
+          <div className="text-center px-4 animate-fadeInUp animation-delay-500">
+            <div className="text-white/95 font-semibold text-sm mb-3 drop-shadow-lg">Popular cuisines:</div>
             <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
               {['Italian', 'Mexican', 'BBQ', 'Asian', 'Steakhouse', 'Breakfast'].map((cuisine) => (
                 <button
@@ -159,7 +190,7 @@ export default function Hero() {
                     params.set('cuisine', cuisine)
                     navigate(`/restaurants?${params.toString()}`)
                   }}
-                  className="bg-white/20 hover:bg-white/30 text-white font-medium px-2.5 sm:px-3 py-1 rounded-full border border-white/30 hover:border-white/50 transition-all duration-200 backdrop-blur-sm text-xs sm:text-sm"
+                  className="bg-white/25 hover:bg-white/40 text-white font-semibold px-2.5 sm:px-3 py-1 rounded-full border border-white/40 hover:border-white/60 transition-all duration-200 backdrop-blur-sm text-xs sm:text-sm shadow-lg"
                 >
                   {cuisine}
                 </button>

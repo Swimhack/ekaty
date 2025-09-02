@@ -4,6 +4,7 @@ import { communityChatService, ChatMessage, OnlineUser } from '../../lib/communi
 import { userService, UserProfile } from '../../lib/user-service'
 import AuthModal from '../components/community/AuthModal'
 import MessageItem from '../components/community/MessageItem'
+import PageTemplate from '@/components/layout/PageTemplate'
 
 export default function Community() {
   const [messages, setMessages] = useState<ChatMessage[]>([])
@@ -259,59 +260,56 @@ export default function Community() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white shadow-sm border-b">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between">
+    <PageTemplate
+      title="Community Chat"
+      subtitle="Connect with fellow food lovers in Katy"
+      maxWidth="4xl"
+      background="gray-50"
+    >
+      {/* Chat Header */}
+      <div className="bg-white shadow-sm border-b rounded-t-lg">
+        <div className="px-4 sm:px-6 py-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-4 sm:space-y-0">
             <div className="flex items-center space-x-3">
-              <MessageCircle className="h-8 w-8 text-orange-500" />
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">Community Chat</h1>
-                <p className="text-gray-600">Connect with fellow food lovers in Katy</p>
-              </div>
-            </div>
-            <div className="flex items-center space-x-4">
+              <MessageCircle className="h-6 w-6 text-orange-500" />
               <div className="flex items-center space-x-2 text-sm text-gray-600">
                 <Users className="h-4 w-4" />
                 <span>{activeUsers.length} online</span>
               </div>
-              
-              {currentUser ? (
-                <div className="flex items-center space-x-3">
-                  <img
-                    src={currentUser.avatar_url || '/images/default-avatar.jpg'}
-                    alt={currentUser.username}
-                    className="h-8 w-8 rounded-full bg-gray-200"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement
-                      target.src = `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" fill="%23e5e7eb"/><text x="16" y="20" font-family="Arial" font-size="12" fill="%236b7280" text-anchor="middle">👤</text></svg>`
-                    }}
-                  />
-                  <span className="text-sm font-medium text-gray-900">{currentUser.username}</span>
-                  <button
-                    onClick={() => userService.signOut()}
-                    className="text-sm text-gray-500 hover:text-gray-700"
-                  >
-                    Sign Out
-                  </button>
-                </div>
-              ) : (
-                <button
-                  onClick={() => setShowAuthModal(true)}
-                  className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors"
-                >
-                  Sign In
-                </button>
-              )}
             </div>
+            
+            {currentUser ? (
+              <div className="flex items-center space-x-3">
+                <img
+                  src={currentUser.avatar_url || '/images/default-avatar.jpg'}
+                  alt={currentUser.username}
+                  className="h-8 w-8 rounded-full bg-gray-200"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement
+                    target.src = `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" fill="%23e5e7eb"/><text x="16" y="20" font-family="Arial" font-size="12" fill="%236b7280" text-anchor="middle">👤</text></svg>`
+                  }}
+                />
+                <span className="text-sm font-medium text-gray-900">{currentUser.username}</span>
+                <button
+                  onClick={() => userService.signOut()}
+                  className="text-sm text-gray-500 hover:text-gray-700"
+                >
+                  Sign Out
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => setShowAuthModal(true)}
+                className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors"
+              >
+                Sign In
+              </button>
+            )}
           </div>
         </div>
       </div>
 
       {/* Chat Container */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="bg-white rounded-lg shadow-sm border">
           {/* Message Input */}
           {currentUser ? (
             <div className="border-b border-gray-200 p-4">
@@ -429,6 +427,6 @@ export default function Community() {
           // The auth state change listener will handle the rest
         }}
       />
-    </div>
+    </PageTemplate>
   )
 }

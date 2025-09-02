@@ -9,6 +9,7 @@ import ErrorBoundary from '@/components/common/ErrorBoundary'
 import { NetworkStatus, useErrorHandler } from '@/components/common/ErrorHandler'
 import { PageLoadingSkeleton, SearchFiltersSkeleton, SearchResultsSkeleton } from '@/components/common/LoadingSkeletons'
 import ErrorHandler from '@/components/common/ErrorHandler'
+import PageTemplate from '@/components/layout/PageTemplate'
 
 interface Cuisine {
   id: number

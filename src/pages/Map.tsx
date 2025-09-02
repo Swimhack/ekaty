@@ -7,6 +7,7 @@ import { type Restaurant } from '../../lib/restaurant-service'
 import EnhancedRestaurantService from '../../lib/enhanced-restaurant-service'
 import { Link } from 'react-router-dom'
 import { Star, MapPin, Phone } from 'lucide-react'
+import PageTemplate from '@/components/layout/PageTemplate'
 
 // Fix for default marker icons in React Leaflet
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png'
@@ -85,16 +86,10 @@ export default function Map() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Header */}
-      <div className="text-center mb-8">
-        <h1 className="text-4xl font-display font-bold text-gray-900 mb-4">
-          Restaurant Map
-        </h1>
-        <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-          Explore Katy's restaurants on an interactive map. Click on markers to see restaurant details.
-        </p>
-      </div>
+    <PageTemplate
+      title="Restaurant Map"
+      subtitle="Explore Katy's restaurants on an interactive map. Click on markers to see restaurant details."
+    >
 
       {/* Map Container */}
       <div className="bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
@@ -223,6 +218,6 @@ export default function Map() {
           </p>
         </div>
       </div>
-    </div>
+    </PageTemplate>
   )
 }
