@@ -404,19 +404,18 @@ export default function Community() {
             )}
             <div ref={messagesEndRef} />
           </div>
-        </div>
 
-        {/* Community Guidelines */}
-        <div className="mt-6 bg-orange-50 border border-orange-200 rounded-lg p-4">
-          <h3 className="font-semibold text-orange-800 mb-2">Community Guidelines</h3>
-          <ul className="text-sm text-orange-700 space-y-1">
-            <li>• Share honest reviews and dining experiences</li>
-            <li>• Be respectful to restaurant owners and fellow diners</li>
-            <li>• No spam, self-promotion, or inappropriate content</li>
-            <li>• Help build a supportive local food community</li>
-          </ul>
+          {/* Community Guidelines */}
+          <div className="mt-6 bg-orange-50 border border-orange-200 rounded-lg p-4">
+            <h3 className="font-semibold text-orange-800 mb-2">Community Guidelines</h3>
+            <ul className="text-sm text-orange-700 space-y-1">
+              <li>• Share honest reviews and dining experiences</li>
+              <li>• Be respectful to restaurant owners and fellow diners</li>
+              <li>• No spam, self-promotion, or inappropriate content</li>
+              <li>• Help build a supportive local food community</li>
+            </ul>
+          </div>
         </div>
-      </div>
 
       {/* Auth Modal */}
       <AuthModal

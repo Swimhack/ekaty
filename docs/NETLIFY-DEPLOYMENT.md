@@ -49,7 +49,7 @@ VITE_APP_NAME=eKaty.com
 NODE_ENV=production
 
 # Required - Services (VITE_ prefix for client-side)
-VITE_GOOGLE_MAPS_API_KEY=AIzaSyA7Ic5d7Uzr8XgYBPWtMB4Z8UDFnjpWypo
+# Map uses free Leaflet + OpenStreetMap (no API key needed)
 VITE_GOOGLE_PLACES_API_KEY=AIzaSyA7Ic5d7Uzr8XgYBPWtMB4Z8UDFnjpWypo
 GOOGLE_PLACES_API_KEY=AIzaSyA7Ic5d7Uzr8XgYBPWtMB4Z8UDFnjpWypo
 ```
