@@ -126,6 +126,18 @@ export default function RestaurantDetail() {
     return phone
   }
 
+  const openInGoogleMaps = (address: string) => {
+    const encodedAddress = encodeURIComponent(address)
+    const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`
+    window.open(googleMapsUrl, '_blank', 'noopener,noreferrer')
+  }
+
+  const openInAppleMaps = (address: string) => {
+    const encodedAddress = encodeURIComponent(address)
+    const appleMapsUrl = `https://maps.apple.com/?q=${encodedAddress}`
+    window.open(appleMapsUrl, '_blank', 'noopener,noreferrer')
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -355,9 +367,29 @@ export default function RestaurantDetail() {
                   <MapPin className="h-5 w-5 text-gray-400 mt-0.5" />
                   <div>
                     <p className="text-gray-900">{restaurant.address}</p>
-                    <button className="text-orange-600 hover:text-orange-700 text-sm font-medium mt-1">
-                      Get Directions
-                    </button>
+                    <div className="flex flex-wrap gap-3 mt-2">
+                      <button 
+                        onClick={() => openInGoogleMaps(restaurant.address)}
+                        className="text-orange-600 hover:text-orange-700 text-sm font-medium flex items-center space-x-1 bg-orange-50 hover:bg-orange-100 px-3 py-1 rounded-md transition-colors"
+                      >
+                        <MapPin className="h-4 w-4" />
+                        <span>Google Maps</span>
+                      </button>
+                      <button 
+                        onClick={() => openInAppleMaps(restaurant.address)}
+                        className="text-gray-600 hover:text-gray-700 text-sm font-medium flex items-center space-x-1 bg-gray-50 hover:bg-gray-100 px-3 py-1 rounded-md transition-colors"
+                      >
+                        <MapPin className="h-4 w-4" />
+                        <span>Apple Maps</span>
+                      </button>
+                      <Link
+                        to={`/map?restaurant=${encodeURIComponent(restaurant.name)}`}
+                        className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center space-x-1 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded-md transition-colors"
+                      >
+                        <MapPin className="h-4 w-4" />
+                        <span>View on Site Map</span>
+                      </Link>
+                    </div>
                   </div>
                 </div>
                 

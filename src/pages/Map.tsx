@@ -5,7 +5,7 @@ import { Icon } from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { type Restaurant } from '../../lib/restaurant-service'
 import EnhancedRestaurantService from '../../lib/enhanced-restaurant-service'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { Star, MapPin, Phone } from 'lucide-react'
 import PageTemplate from '@/components/layout/PageTemplate'
 
@@ -36,10 +36,27 @@ const restaurantIcon = new Icon({
   shadowSize: [41, 41]
 })
 
+// Highlighted restaurant marker icon (larger and different color)
+const highlightedRestaurantIcon = new Icon({
+  iconUrl: 'data:image/svg+xml;base64,' + btoa(`
+    <svg width="32" height="41" viewBox="0 0 32 41" xmlns="http://www.w3.org/2000/svg">
+      <path d="M16 0C7.163 0 0 7.163 0 16c0 11.25 16 25 16 25s16-13.75 16-25C32 7.163 24.837 0 16 0z" fill="#f97316"/>
+      <circle cx="16" cy="16" r="8" fill="white"/>
+      <circle cx="16" cy="16" r="4" fill="#f97316"/>
+    </svg>
+  `),
+  iconSize: [32, 41],
+  iconAnchor: [16, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+})
+
 export default function Map() {
   const [restaurants, setRestaurants] = useState<Restaurant[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [searchParams] = useSearchParams()
+  const highlightedRestaurant = searchParams.get('restaurant')
 
   // Katy, Texas coordinates
   const katyCenter: [number, number] = [29.7858, -95.8244]
@@ -90,6 +107,22 @@ export default function Map() {
       title="Restaurant Map"
       subtitle="Explore Katy's restaurants on an interactive map. Click on markers to see restaurant details."
     >
+      {/* Highlighted Restaurant Notification */}
+      {highlightedRestaurant && (
+        <div className="mb-6 bg-orange-50 border border-orange-200 rounded-lg p-4">
+          <div className="flex items-center space-x-3">
+            <MapPin className="h-5 w-5 text-orange-600" />
+            <div>
+              <p className="text-orange-800 font-medium">
+                Showing location for: <span className="font-bold">{highlightedRestaurant}</span>
+              </p>
+              <p className="text-orange-600 text-sm">
+                Look for the orange marker on the map below
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Map Container */}
       <div className="bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
@@ -127,11 +160,14 @@ export default function Map() {
                 const lat = katyCenter[0] + (Math.random() - 0.5) * 0.05
                 const lng = katyCenter[1] + (Math.random() - 0.5) * 0.05
                 
+                const isHighlighted = highlightedRestaurant && 
+                  restaurant.name.toLowerCase().includes(highlightedRestaurant.toLowerCase())
+                
                 return (
                   <Marker
                     key={restaurant.id}
                     position={[lat, lng]}
-                    icon={restaurantIcon}
+                    icon={isHighlighted ? highlightedRestaurantIcon : restaurantIcon}
                   >
                     <Popup className="restaurant-popup" maxWidth={300}>
                       <div className="p-2">
