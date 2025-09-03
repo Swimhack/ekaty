@@ -415,7 +415,6 @@ export default function Community() {
               <li>• Help build a supportive local food community</li>
             </ul>
           </div>
-        </div>
 
       {/* Auth Modal */}
       <AuthModal
