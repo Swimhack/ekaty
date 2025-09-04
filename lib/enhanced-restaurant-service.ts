@@ -170,14 +170,13 @@ export class EnhancedRestaurantService {
 
   // Helper method to fetch individual restaurant (to be implemented)
   private static async fetchRestaurantById(id: number | string): Promise<Restaurant | null> {
-    // This would use the Supabase client to fetch a single restaurant
-    // Implementation would be similar to getRestaurants but for a single item
-    const filters: RestaurantFilters = { limit: 1, offset: 0 }
+    // Get all restaurants and find the one we're looking for
+    const filters: RestaurantFilters = { limit: 200, offset: 0 }
     const response = await RestaurantService.getRestaurants(filters)
     
     // Find the restaurant by ID or slug
     const restaurant = response.restaurants.find(r => 
-      r.id === Number(id) || r.slug === id
+      r.id === id || r.id === Number(id) || r.slug === id
     )
     
     return restaurant || null
